@@ -28,7 +28,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
     </changeSet>
 
     <changeSet id="2023-12-16-create-table-checks" author="m3mpm">
