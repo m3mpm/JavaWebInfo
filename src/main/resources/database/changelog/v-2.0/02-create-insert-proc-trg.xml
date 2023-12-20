@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <changeSet id="2023-12-18-create-p2p-insert-procedure" author="m3mpm">
+    <changeSet id="v-2.0-create-p2p-insert-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
@@ -59,7 +59,7 @@
     </changeSet>
 
 
-    <changeSet id="2023-12-18-create-verter-insert-procedure" author="m3mpm">
+    <changeSet id="v-2.0-create-verter-insert-procedure" author="m3mpm">
     <sql endDelimiter="\nGO"
          splitStatements="true"
          stripComments="true">
@@ -108,7 +108,7 @@
     </sql>
     </changeSet>
 
-    <changeSet id="2023-12-18-create-xp-insert-procedure" author="m3mpm">
+    <changeSet id="v-2.0-create-xp-insert-procedure" author="m3mpm">
     <sql endDelimiter="\nGO"
          splitStatements="true"
          stripComments="true">
@@ -132,7 +132,7 @@
     </sql>
     </changeSet>
 
-    <changeSet id="2023-12-18-create-fnc_trg_TransferredPoints_insert_audit-func" author="m3mpm">
+    <changeSet id="v-2.0-create-fnc_trg_TransferredPoints_insert_audit-func" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
@@ -169,7 +169,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="2023-12-18-create-p2p-transferred_points-trg" author="m3mpm">
+    <changeSet id="v-2.0-create-p2p-transferred_points-trg" author="m3mpm">
     <sql endDelimiter="\nGO"
          splitStatements="true"
          stripComments="true">
@@ -182,7 +182,7 @@
     </sql>
     </changeSet>
 
-    <changeSet id="2023-12-18-create-fnc_trg_XP_insert_audit-func" author="m3mpm">
+    <changeSet id="v-2.0-create-fnc_trg_XP_insert_audit-func" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
@@ -212,7 +212,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="2023-12-18-create-xp-check-insert-trg-1" author="m3mpm">
+    <changeSet id="v-2.0-create-xp-check-insert-trg-1" author="m3mpm">
     <sql endDelimiter="\nGO"
          splitStatements="true"
          stripComments="true">
@@ -225,7 +225,7 @@
     </sql>
     </changeSet>
 
-    <changeSet id="2023-12-18-create-xp-check-update-trg-2" author="m3mpm">
+    <changeSet id="v-2.0-create-xp-check-update-trg-2" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">

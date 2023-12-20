@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <include file="2023-12-18--01-create-data-import-export-proc.xml" relativeToChangelogFile="true"/>
-    <include file="2023-12-18--02-create-insert-proc-trg.xml" relativeToChangelogFile="true"/>
+    <include file="01-create-data-import-export-proc.xml" relativeToChangelogFile="true"/>
+    <include file="02-create-insert-proc-trg.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <changeSet id="2023-12-16-create-import-helper-function" author="m3mpm">
+    <changeSet id="v-2.0-create-import-helper-function" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
@@ -21,7 +21,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="2023-12-16-create-import-procedure" author="m3mpm">
+    <changeSet id="v-2.0-create-import-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
@@ -43,7 +43,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="2023-12-16-create-export-procedure" author="m3mpm">
+    <changeSet id="v-2.0-create-export-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
