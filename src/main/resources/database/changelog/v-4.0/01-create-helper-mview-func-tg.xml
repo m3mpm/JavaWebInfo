@@ -5,12 +5,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
+<!--    вспомогательная MATERIALIZED VIEW mv_checks, так как в разных tasks присутсвует-->
+<!--    одинаковый запрос к одним и тем же данным-->
     <changeSet id="v-4.0-create-helper-checks-mview" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            -- вспомогательная MATERIALIZED VIEW mv_checks, так как в разных tasks присутсвует
-            -- одинаковый запрос к одним и тем же данным
             DROP MATERIALIZED VIEW IF EXISTS mv_checks;
             CREATE MATERIALIZED VIEW mv_checks AS
             SELECT  ch.id,
@@ -27,11 +27,11 @@
         </sql>
     </changeSet>
 
+<!--    функция обновления VIEW mv_checks-->
     <changeSet id="v-4.0-create-refresh-mv_checks-func" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            -- функция обновления VIEW mv_checks
             CREATE OR REPLACE FUNCTION tg_refresh_mv_checks()
             RETURNS TRIGGER LANGUAGE plpgsql AS $$
             BEGIN
@@ -41,12 +41,11 @@
         </sql>
     </changeSet>
 
-
+<!--    триггер обновления VIEW mv_checks, если обновятся данные в p2p table-->
     <changeSet id="v-4.0-create-refresh-mv_checks-trg" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            -- триггер обновления VIEW mv_checks, если обновятся данные в p2p table
             CREATE OR REPLACE TRIGGER tg_refresh_mv_checks AFTER INSERT OR UPDATE OR DELETE
             ON p2p
             FOR EACH STATEMENT EXECUTE PROCEDURE tg_refresh_mv_checks();

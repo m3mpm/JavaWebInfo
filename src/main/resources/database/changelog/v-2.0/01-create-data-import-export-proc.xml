@@ -5,11 +5,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
+<!--    procedures for import data into tables from csv files-->
     <changeSet id="v-2.0-create-import-helper-function" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-                -- procedures for import data into tables from csv files and export data from tables to csv files
                 CREATE OR REPLACE FUNCTION fnc_get_columns_names(tablename text)
                 RETURNS TEXT AS $$
                         BEGIN
@@ -21,6 +21,7 @@
                 LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
 
     <changeSet id="v-2.0-create-import-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -44,6 +45,7 @@
         </sql>
     </changeSet>
 
+<!--    procedures for export data from tables to csv files-->
     <changeSet id="v-2.0-create-export-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"

@@ -5,11 +5,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
+<!--    1. Написать процедуру добавления P2P проверки-->
     <changeSet id="v-2.0-create-p2p-insert-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            -- 1. Написать процедуру добавления P2P проверки
             CREATE OR REPLACE PROCEDURE pr_p2p_insert(IN peer_checked_ text, IN peer_checking_ text, IN task_ varchar, IN status_ varchar, IN time_ time)
             LANGUAGE plpgsql as $$
             DECLARE
@@ -59,12 +59,11 @@
         </sql>
     </changeSet>
 
-
+<!--    2. Написать процедуру добавления проверки Verter'ом-->
     <changeSet id="v-2.0-create-verter-insert-procedure" author="m3mpm">
     <sql endDelimiter="\nGO"
          splitStatements="true"
          stripComments="true">
-        -- 2. Написать процедуру добавления проверки Verter'ом
         CREATE OR REPLACE PROCEDURE pr_verter_insert(IN peer_checked_ text, IN task_ varchar, IN status_ varchar, IN time_ time)
         LANGUAGE plpgsql AS $$
         DECLARE
@@ -109,11 +108,11 @@
     </sql>
     </changeSet>
 
+<!--    Дополнительная процедура для заполнения данных в xp таблицу-->
     <changeSet id="v-2.0-create-xp-insert-procedure" author="m3mpm">
     <sql endDelimiter="\nGO"
          splitStatements="true"
          stripComments="true">
-        -- Дополнительная процедура для заполнения данных в xp таблицу
         CREATE OR REPLACE PROCEDURE pr_xp_insert (IN peer_checked_ text, IN task_ varchar, IN starttime_ time, IN percentxp_ integer)
         LANGUAGE plpgsql AS $$
         DECLARE
@@ -133,12 +132,12 @@
     </sql>
     </changeSet>
 
+<!--    3. Написать триггер: после добавления записи со статутом "начало" в таблицу P2P, изменить соответствующую запись в таблице transferred_points-->
+<!--    Функция внесения изменения в таблице transferred_points, когда сработает триггер-->
     <changeSet id="v-2.0-create-fnc_trg_TransferredPoints_insert_audit-func" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            -- 3. Написать триггер: после добавления записи со статутом "начало" в таблицу P2P, изменить соответствующую запись в таблице transferred_points
-            -- Функция внесения изменения в таблице transferred_points, когда сработает триггер
             CREATE OR REPLACE FUNCTION pr_trg_TransferredPoints_insert_audit() RETURNS trigger
             LANGUAGE plpgsql AS $$
             DECLARE
@@ -170,11 +169,11 @@
         </sql>
     </changeSet>
 
+<!--    Создание триггера, если происходит добавление записи в таблицу p2p, то происходит запись в таблицу transferred_points-->
     <changeSet id="v-2.0-create-p2p-transferred_points-trg" author="m3mpm">
     <sql endDelimiter="\nGO"
          splitStatements="true"
          stripComments="true">
-        -- Создание триггера, если происходит добавление записи в таблицу p2p, то происходит запись в таблицу transferred_points
         CREATE OR REPLACE TRIGGER trg_TransferredPoints_insert_audit
             AFTER INSERT
             ON p2p
@@ -183,12 +182,13 @@
     </sql>
     </changeSet>
 
+
+<!--    4. Написать триггер: перед добавлением записи в таблицу XP, проверить корректность добавляемой записи-->
+<!--    Функция проверки корректности добавляемой записи-->
     <changeSet id="v-2.0-create-fnc_trg_XP_insert_audit-func" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            -- 4. Написать триггер: перед добавлением записи в таблицу XP, проверить корректность добавляемой записи
-            -- Функция проверки корректности добавляемой записи
             CREATE OR REPLACE FUNCTION fnc_trg_XP_insert_audit() RETURNS trigger
             LANGUAGE plpgsql AS $$
             BEGIN
@@ -213,11 +213,11 @@
         </sql>
     </changeSet>
 
+<!--    Создание триггера проверки корректоности данных перед добавление записи в таблицу XP-->
     <changeSet id="v-2.0-create-xp-check-insert-trg-1" author="m3mpm">
     <sql endDelimiter="\nGO"
          splitStatements="true"
          stripComments="true">
-        -- Создание триггера проверки корректоности данных перед добавление записи в таблицу XP
         CREATE OR REPLACE TRIGGER trg_XP_insert_audit
             BEFORE INSERT
             ON XP
@@ -226,11 +226,11 @@
     </sql>
     </changeSet>
 
+<!--    Создание триггера проверки корректоности данных перед обновление записи в таблице XP-->
     <changeSet id="v-2.0-create-xp-check-update-trg-2" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            -- Создание триггера проверки корректоности данных перед обновление записи в таблице XP
             CREATE OR REPLACE TRIGGER trg_XP_insert_audit
                 BEFORE UPDATE
                 ON XP
