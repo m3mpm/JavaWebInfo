@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-<!--    procedures for import data into tables from csv files-->
+<!--    прцедура для имопрта данных из файла в таблицу-->
     <changeSet id="v-2.0-create-import-helper-function" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
@@ -45,7 +45,7 @@
         </sql>
     </changeSet>
 
-<!--    procedures for export data from tables to csv files-->
+<!--    процедура для эксопрта данных из таблицы в файл-->
     <changeSet id="v-2.0-create-export-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
