@@ -46,7 +46,7 @@
                                    AND peer = peer_checked_
                                    AND checking_peer = peer_checking_
                                    AND "date" = now()::date
-                                   AND time &lt; time_
+                                   AND time &lt;= time_
                                  ORDER BY "time" DESC
                                  LIMIT 1);
                     IF check_id_tmp != 0
