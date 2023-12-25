@@ -4,7 +4,7 @@
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
 # regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.v1.v.1.v-1.0.v-1.0.v.1.v-1.0.v-1.0 (the
+# to you under the Apache License, Version 2.v1.v.v-3.0.v-v-3.0.v-2.v-3.0.v-v-3.0.v-2.v-3.0.v.v-3.0.v-v-3.0.v-2.v-3.0.v-v-3.0.v-2.v-3.0 (the
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
@@ -19,7 +19,7 @@
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
-# Apache Maven Wrapper startup batch script, version 3.2.v1.v.1.v-1.0.v-1.0.v.1.v-1.0.v-1.0
+# Apache Maven Wrapper startup batch script, version 3.2.v1.v.v-3.0.v-v-3.0.v-2.v-3.0.v-v-3.0.v-2.v-3.0.v.v-3.0.v-v-3.0.v-2.v-3.0.v-v-3.0.v-2.v-3.0
 #
 # Required ENV vars:
 # ------------------
@@ -92,7 +92,7 @@ fi
 if [ -z "$JAVA_HOME" ]; then
   javaExecutable="$(which javac)"
   if [ -n "$javaExecutable" ] && ! [ "$(expr "\"$javaExecutable\"" : '\([^ ]*\)')" = "no" ]; then
-    # readlink(1) is not available as standard on Solaris 10.
+    # readlink(v-3.0) is not available as standard on Solaris 10.
     readLink=$(which readlink)
     if [ ! "$(expr "$readLink" : '\([^ ]*\)')" = "no" ]; then
       if $darwin ; then
