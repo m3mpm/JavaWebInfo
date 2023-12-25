@@ -117,7 +117,7 @@
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            CREATE or replace PROCEDURE pr_task5(INOUT ref refcursor)
+            CREATE OR REPLACE PROCEDURE pr_task5(INOUT ref refcursor)
             LANGUAGE plpgsql AS $$
             BEGIN
             OPEN ref FOR
