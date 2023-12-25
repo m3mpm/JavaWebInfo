@@ -73,14 +73,14 @@ CREATE TABLE TimeTracking (
 -- end create tables
 
 -- procedures for import data into tables from csv files and export data from tables to csv files
-CREATE OR REPLACE FUNCTION fnc_get_columns_names(tablename text) RETURNS TEXT AS $$
+CREATE OR REPLACE FUNCTION fnc_get_columns_names(tablename text) RETURNS TEXT AS $BODY$
     BEGIN
         RETURN (SELECT string_agg(format('%s', quote_ident(column_name)), ',' ) FROM ( SELECT column_name
                                                                                        FROM information_schema.columns
                                                                                        WHERE table_schema='public' AND table_name = tablename
                                                                                          AND NOT column_name = 'id') AS names);
     END
-$$ LANGUAGE plpgsql;;
+$BODY$ LANGUAGE plpgsql;;
 
 -- CREATE OR REPLACE PROCEDURE pr_fill_table_from_csv(IN tablename text,IN path text,IN delim text)
 -- LANGUAGE plpgsql as $$
