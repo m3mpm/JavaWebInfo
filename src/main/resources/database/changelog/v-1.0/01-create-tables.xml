@@ -33,7 +33,7 @@
 
     <changeSet id="v-1.0-create-table-checks" author="m3mpm">
         <createTable tableName="checks">
-            <column name="id" type="serial">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="peer" type="varchar">
@@ -52,7 +52,7 @@
 
     <changeSet id="v-1.0-create-table-p2p" author="m3mpm">
         <createTable tableName="p2p">
-            <column name="id" type="serial">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="check_id" type="bigint">
@@ -74,7 +74,7 @@
 
     <changeSet id="v-1.0-create-table-verter" author="m3mpm">
         <createTable tableName="verter">
-            <column name="id" type="serial">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="check_id" type="bigint">
@@ -92,7 +92,7 @@
 
     <changeSet id="v-1.0-create-table-transferred_points" author="m3mpm">
         <createTable tableName="transferred_points">
-            <column name="id" type="serial">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="checking_peer" type="varchar">
@@ -111,7 +111,7 @@
 
     <changeSet id="v-1.0-create-table-friends" author="m3mpm">
         <createTable tableName="friends">
-            <column name="id" type="serial">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="peer1" type="varchar">
@@ -127,7 +127,7 @@
 
     <changeSet id="v-1.0-create-table-recommendations" author="m3mpm">
         <createTable tableName="recommendations">
-            <column name="id" type="serial">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="peer" type="varchar">
@@ -143,7 +143,7 @@
 
     <changeSet id="v-1.0-create-table-xp" author="m3mpm">
         <createTable tableName="xp">
-            <column name="id" type="serial">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="check_id" type="bigint">
@@ -158,7 +158,7 @@
 
     <changeSet id="v-1.0-create-table-time_tracking" author="m3mpm">
         <createTable tableName="time_tracking">
-            <column name="id" type="serial">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="peer" type="varchar">
