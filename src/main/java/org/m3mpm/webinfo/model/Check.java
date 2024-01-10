@@ -1,18 +1,35 @@
 package org.m3mpm.webinfo.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
+
+@Entity
+@Table(name = "checks")
 public class Check {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    private String peer;
-    private String task;
+
+    @ManyToOne
+    @JoinColumn(name = "peer")
+    private Peer peer;
+
+    @ManyToOne
+    @JoinColumn(name = "task")
+    private Task task;
+
+    @Column(name = "date")
     private LocalDate date;
 
     public Check() {
     }
 
-    public Check(Long id, String peer, String task, LocalDate date) {
+    public Check(Long id, Peer peer, Task task, LocalDate date) {
         this.id = id;
         this.peer = peer;
         this.task = task;
@@ -27,19 +44,19 @@ public class Check {
         this.id = id;
     }
 
-    public String getPeer() {
+    public Peer getPeer() {
         return peer;
     }
 
-    public void setPeer(String peer) {
+    public void setPeer(Peer peer) {
         this.peer = peer;
     }
 
-    public String getTask() {
+    public Task getTask() {
         return task;
     }
 
-    public void setTask(String task) {
+    public void setTask(Task task) {
         this.task = task;
     }
 
@@ -68,8 +85,8 @@ public class Check {
     public String toString() {
         return "Check{" +
                 "id=" + id +
-                ", peer='" + peer + '\'' +
-                ", task='" + task + '\'' +
+                ", peer=" + peer +
+                ", task=" + task +
                 ", date=" + date +
                 '}';
     }
