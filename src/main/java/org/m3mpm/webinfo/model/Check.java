@@ -28,8 +28,8 @@ public class Check {
     @Column(name = "date")
     private LocalDate date;
 
-    @OneToMany(mappedBy = "checkID",cascade = CascadeType.ALL, orphanRemoval = true)
-    List<P2P> p2pList = new ArrayList<>();
+    @OneToMany(mappedBy = "checkId",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<P2P> p2pList = new ArrayList<>();
 
     public Check() {
     }
@@ -39,6 +39,14 @@ public class Check {
         this.peer = peer;
         this.task = task;
         this.date = date;
+    }
+
+    public void addP2P(P2P p2p){
+        p2pList.add(p2p);
+    }
+
+    public void removeP2P(P2P p2p){
+        p2pList.remove(p2p);
     }
 
     public Long getId() {
@@ -73,17 +81,25 @@ public class Check {
         this.date = date;
     }
 
+    public List<P2P> getP2pList() {
+        return p2pList;
+    }
+
+    public void setP2pList(List<P2P> p2pList) {
+        this.p2pList = p2pList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Check check = (Check) o;
-        return Objects.equals(id, check.id) && Objects.equals(peer, check.peer) && Objects.equals(task, check.task) && Objects.equals(date, check.date);
+        return Objects.equals(id, check.id) && Objects.equals(peer, check.peer) && Objects.equals(task, check.task) && Objects.equals(date, check.date) && Objects.equals(p2pList, check.p2pList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, peer, task, date);
+        return Objects.hash(id, peer, task, date, p2pList);
     }
 
     @Override
@@ -93,6 +109,7 @@ public class Check {
                 ", peer=" + peer +
                 ", task=" + task +
                 ", date=" + date +
+                ", p2pList=" + p2pList +
                 '}';
     }
 }

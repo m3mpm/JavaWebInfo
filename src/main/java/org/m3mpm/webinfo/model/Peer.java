@@ -56,17 +56,25 @@ public class Peer {
         this.checks = checks;
     }
 
+    public List<P2P> getP2pList() {
+        return p2pList;
+    }
+
+    public void setP2pList(List<P2P> p2pList) {
+        this.p2pList = p2pList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Peer peer = (Peer) o;
-        return Objects.equals(nickname, peer.nickname) && Objects.equals(birthday, peer.birthday) && Objects.equals(checks, peer.checks);
+        return Objects.equals(nickname, peer.nickname) && Objects.equals(birthday, peer.birthday) && Objects.equals(checks, peer.checks) && Objects.equals(p2pList, peer.p2pList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nickname, birthday, checks);
+        return Objects.hash(nickname, birthday, checks, p2pList);
     }
 
     @Override
@@ -75,6 +83,7 @@ public class Peer {
                 "nickname='" + nickname + '\'' +
                 ", birthday=" + birthday +
                 ", checks=" + checks +
+                ", p2pList=" + p2pList +
                 '}';
     }
 }

@@ -19,8 +19,11 @@ public class P2P {
     @ManyToOne
     @JoinColumn(name = "checking_peer")
     private Peer checkingPeer;
+
+    @Column(name = "state")
     private String state;
 
+    @Column(name = "time")
     private LocalTime time;
 
     public P2P() {
