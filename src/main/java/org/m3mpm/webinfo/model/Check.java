@@ -3,6 +3,8 @@ package org.m3mpm.webinfo.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -25,6 +27,9 @@ public class Check {
 
     @Column(name = "date")
     private LocalDate date;
+
+    @OneToMany(mappedBy = "checkID",cascade = CascadeType.ALL, orphanRemoval = true)
+    List<P2P> p2pList = new ArrayList<>();
 
     public Check() {
     }

@@ -1,12 +1,24 @@
 package org.m3mpm.webinfo.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalTime;
 import java.util.Objects;
-
+@Entity
+@Table(name = "p2p")
 public class P2P {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long checkId;
-    private String checkingPeer;
+
+    @ManyToOne
+    @JoinColumn(name = "check_id")
+    private Check checkId;
+
+    @ManyToOne
+    @JoinColumn(name = "checking_peer")
+    private Peer checkingPeer;
     private String state;
 
     private LocalTime time;
@@ -14,7 +26,7 @@ public class P2P {
     public P2P() {
     }
 
-    public P2P(Long id, Long checkId, String checkingPeer, String state, LocalTime time) {
+    public P2P(Long id, Check checkId, Peer checkingPeer, String state, LocalTime time) {
         this.id = id;
         this.checkId = checkId;
         this.checkingPeer = checkingPeer;
@@ -30,19 +42,19 @@ public class P2P {
         this.id = id;
     }
 
-    public Long getCheckId() {
+    public Check getCheckId() {
         return checkId;
     }
 
-    public void setCheckId(Long checkId) {
+    public void setCheckId(Check checkId) {
         this.checkId = checkId;
     }
 
-    public String getCheckingPeer() {
+    public Peer getCheckingPeer() {
         return checkingPeer;
     }
 
-    public void setCheckingPeer(String checkingPeer) {
+    public void setCheckingPeer(Peer checkingPeer) {
         this.checkingPeer = checkingPeer;
     }
 
@@ -80,7 +92,7 @@ public class P2P {
         return "P2P{" +
                 "id=" + id +
                 ", checkId=" + checkId +
-                ", checkingPeer='" + checkingPeer + '\'' +
+                ", checkingPeer=" + checkingPeer +
                 ", state='" + state + '\'' +
                 ", time=" + time +
                 '}';
