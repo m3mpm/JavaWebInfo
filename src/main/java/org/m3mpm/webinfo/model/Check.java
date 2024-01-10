@@ -31,6 +31,9 @@ public class Check {
     @OneToMany(mappedBy = "checkId",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<P2P> p2pList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "checkId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Verter> verters = new ArrayList<>();
+
     public Check() {
     }
 
@@ -89,17 +92,25 @@ public class Check {
         this.p2pList = p2pList;
     }
 
+    public List<Verter> getVerters() {
+        return verters;
+    }
+
+    public void setVerters(List<Verter> verters) {
+        this.verters = verters;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Check check = (Check) o;
-        return Objects.equals(id, check.id) && Objects.equals(peer, check.peer) && Objects.equals(task, check.task) && Objects.equals(date, check.date) && Objects.equals(p2pList, check.p2pList);
+        return Objects.equals(id, check.id) && Objects.equals(peer, check.peer) && Objects.equals(task, check.task) && Objects.equals(date, check.date) && Objects.equals(p2pList, check.p2pList) && Objects.equals(verters, check.verters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, peer, task, date, p2pList);
+        return Objects.hash(id, peer, task, date, p2pList, verters);
     }
 
     @Override
@@ -110,6 +121,7 @@ public class Check {
                 ", task=" + task +
                 ", date=" + date +
                 ", p2pList=" + p2pList +
+                ", verters=" + verters +
                 '}';
     }
 }

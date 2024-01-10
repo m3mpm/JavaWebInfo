@@ -1,19 +1,33 @@
 package org.m3mpm.webinfo.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalTime;
 import java.util.Objects;
 
+@Entity
+@Table(name = "verter")
 public class Verter {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    private Long checkId;
+
+    @ManyToOne
+    @JoinColumn(name = "check_id")
+    private Check checkId;
+
+    @Column(name = "state")
     private String state;
+
+    @Column(name = "time")
     private LocalTime time;
 
     public Verter() {
     }
 
-    public Verter(Long id, Long checkId, String state, LocalTime time) {
+    public Verter(Long id, Check checkId, String state, LocalTime time) {
         this.id = id;
         this.checkId = checkId;
         this.state = state;
@@ -28,11 +42,11 @@ public class Verter {
         this.id = id;
     }
 
-    public Long getCheckId() {
+    public Check getCheckId() {
         return checkId;
     }
 
-    public void setCheckId(Long checkId) {
+    public void setCheckId(Check checkId) {
         this.checkId = checkId;
     }
 
