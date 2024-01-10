@@ -1,18 +1,31 @@
 package org.m3mpm.webinfo.model;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+
+@Entity
+@Table(name = "xp")
 public class Xp {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private Long checkId;
 
+    @OneToOne
+    @JoinColumn(name = "check_id")
+    private Check checkId;
+
+    @Column(name = "xp_amount")
     private Integer xpAmount;
 
     public Xp() {
     }
 
-    public Xp(Long id, Long checkId, Integer xpAmount) {
+    public Xp(Long id, Check checkId, Integer xpAmount) {
         this.id = id;
         this.checkId = checkId;
         this.xpAmount = xpAmount;
@@ -26,11 +39,11 @@ public class Xp {
         this.id = id;
     }
 
-    public Long getCheckId() {
+    public Check getCheckId() {
         return checkId;
     }
 
-    public void setCheckId(Long checkId) {
+    public void setCheckId(Check checkId) {
         this.checkId = checkId;
     }
 

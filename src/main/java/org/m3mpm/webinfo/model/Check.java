@@ -34,6 +34,9 @@ public class Check {
     @OneToMany(mappedBy = "checkId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Verter> verters = new ArrayList<>();
 
+    @OneToOne(mappedBy = "checkId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Xp xp;
+
     public Check() {
     }
 
