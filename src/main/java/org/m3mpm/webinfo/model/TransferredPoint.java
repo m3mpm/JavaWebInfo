@@ -1,18 +1,34 @@
 package org.m3mpm.webinfo.model;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+
+@Entity
+@Table(name = "transferred_points")
 public class TransferredPoint {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    private String checkingPeer;
-    private String checkedPeer;
+
+    @ManyToOne
+    @JoinColumn(name = "checking_peer")
+    private Peer checkingPeer;
+
+    @ManyToOne
+    @JoinColumn(name = "checked_peer")
+    private Peer checkedPeer;
+
+    @Column(name = "points_amount")
     private Integer pointsAmount;
 
     public TransferredPoint() {
     }
 
-    public TransferredPoint(Long id, String checkingPeer, String checkedPeer, Integer pointsAmount) {
+    public TransferredPoint(Long id, Peer checkingPeer, Peer checkedPeer, Integer pointsAmount) {
         this.id = id;
         this.checkingPeer = checkingPeer;
         this.checkedPeer = checkedPeer;
@@ -27,19 +43,19 @@ public class TransferredPoint {
         this.id = id;
     }
 
-    public String getCheckingPeer() {
+    public Peer getCheckingPeer() {
         return checkingPeer;
     }
 
-    public void setCheckingPeer(String checkingPeer) {
+    public void setCheckingPeer(Peer checkingPeer) {
         this.checkingPeer = checkingPeer;
     }
 
-    public String getCheckedPeer() {
+    public Peer getCheckedPeer() {
         return checkedPeer;
     }
 
-    public void setCheckedPeer(String checkedPeer) {
+    public void setCheckedPeer(Peer checkedPeer) {
         this.checkedPeer = checkedPeer;
     }
 
@@ -68,8 +84,8 @@ public class TransferredPoint {
     public String toString() {
         return "TransferredPoint{" +
                 "id=" + id +
-                ", checkingPeer='" + checkingPeer + '\'' +
-                ", checkedPeer='" + checkedPeer + '\'' +
+                ", checkingPeer=" + checkingPeer +
+                ", checkedPeer=" + checkedPeer +
                 ", pointsAmount=" + pointsAmount +
                 '}';
     }

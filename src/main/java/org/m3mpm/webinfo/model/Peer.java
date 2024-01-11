@@ -24,6 +24,12 @@ public class Peer {
     @OneToMany(mappedBy = "checkingPeer",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<P2P> p2pList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "checkingPeer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransferredPoint> checkingPeers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "checkedPeer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransferredPoint> checkedPeers = new ArrayList<>();
+
     public Peer() {
     }
 
