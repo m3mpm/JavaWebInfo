@@ -1,25 +1,38 @@
 package org.m3mpm.webinfo.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+
+@Entity
+@Table(name = "time_tracking")
 public class TimeTracking {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String peer;
+    @ManyToOne
+    @JoinColumn(name = "peer")
+    private Peer peer;
 
+    @Column(name = "date")
     private LocalDate date;
 
+    @Column(name = "time")
     private LocalTime time;
 
-    private String state;
+    @Column(name = "state")
+    private Integer state;
 
     public TimeTracking() {
     }
 
-    public TimeTracking(Long id, String peer, LocalDate date, LocalTime time, String state) {
+    public TimeTracking(Long id, Peer peer, LocalDate date, LocalTime time, Integer state) {
         this.id = id;
         this.peer = peer;
         this.date = date;
@@ -35,11 +48,11 @@ public class TimeTracking {
         this.id = id;
     }
 
-    public String getPeer() {
+    public Peer getPeer() {
         return peer;
     }
 
-    public void setPeer(String peer) {
+    public void setPeer(Peer peer) {
         this.peer = peer;
     }
 
@@ -59,11 +72,11 @@ public class TimeTracking {
         this.time = time;
     }
 
-    public String getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 
@@ -84,10 +97,10 @@ public class TimeTracking {
     public String toString() {
         return "TimeTracking{" +
                 "id=" + id +
-                ", peer='" + peer + '\'' +
+                ", peer=" + peer +
                 ", date=" + date +
                 ", time=" + time +
-                ", state='" + state + '\'' +
+                ", state=" + state +
                 '}';
     }
 }

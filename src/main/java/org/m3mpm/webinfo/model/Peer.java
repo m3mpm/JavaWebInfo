@@ -19,17 +19,16 @@ public class Peer {
     private LocalDate birthday;
 
     @OneToMany(mappedBy = "peer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Check> checks = new ArrayList<>();
+    private List<Check> checkPeer = new ArrayList<>();
 
     @OneToMany(mappedBy = "checkingPeer",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<P2P> p2pList = new ArrayList<>();
+    private List<P2P> p2pCheckingPeer = new ArrayList<>();
 
     @OneToMany(mappedBy = "checkingPeer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransferredPoint> checkingPeers = new ArrayList<>();
+    private List<TransferredPoint> transferredPointCheckingPeer = new ArrayList<>();
 
     @OneToMany(mappedBy = "checkedPeer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransferredPoint> checkedPeers = new ArrayList<>();
-
+    private List<TransferredPoint> transferredPointCheckedPeers = new ArrayList<>();
 
     @OneToMany(mappedBy = "peer1", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friend> friendPeer1 = new ArrayList<>();
@@ -37,12 +36,15 @@ public class Peer {
     @OneToMany(mappedBy = "peer2", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friend> friendPeer2 = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "peer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recommendation> recommendationPeer = new ArrayList<>();
 
     @OneToMany(mappedBy = "recommendedPeer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Recommendation> recommendedPeer = new ArrayList<>();
+    private List<Recommendation> recommendationRecommendedPeer = new ArrayList<>();
+
+    @OneToMany(mappedBy = "peer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TimeTracking> timeTrackingPeer = new ArrayList<>();
+
 
     public Peer() {
     }
@@ -68,20 +70,76 @@ public class Peer {
         this.birthday = birthday;
     }
 
-    public List<Check> getChecks() {
-        return checks;
+    public List<Check> getCheckPeer() {
+        return checkPeer;
     }
 
-    public void setChecks(List<Check> checks) {
-        this.checks = checks;
+    public void setCheckPeer(List<Check> checks) {
+        this.checkPeer = checks;
     }
 
-    public List<P2P> getP2pList() {
-        return p2pList;
+    public List<P2P> getP2pCheckingPeer() {
+        return p2pCheckingPeer;
     }
 
-    public void setP2pList(List<P2P> p2pList) {
-        this.p2pList = p2pList;
+    public void setP2pCheckingPeer(List<P2P> p2pList) {
+        this.p2pCheckingPeer = p2pList;
+    }
+
+    public List<TransferredPoint> getTransferredPointCheckingPeer() {
+        return transferredPointCheckingPeer;
+    }
+
+    public void setTransferredPointCheckingPeer(List<TransferredPoint> checkingPeers) {
+        this.transferredPointCheckingPeer = checkingPeers;
+    }
+
+    public List<TransferredPoint> getTransferredPointCheckedPeers() {
+        return transferredPointCheckedPeers;
+    }
+
+    public void setTransferredPointCheckedPeers(List<TransferredPoint> checkedPeers) {
+        this.transferredPointCheckedPeers = checkedPeers;
+    }
+
+    public List<Friend> getFriendPeer1() {
+        return friendPeer1;
+    }
+
+    public void setFriendPeer1(List<Friend> friendPeer1) {
+        this.friendPeer1 = friendPeer1;
+    }
+
+    public List<Friend> getFriendPeer2() {
+        return friendPeer2;
+    }
+
+    public void setFriendPeer2(List<Friend> friendPeer2) {
+        this.friendPeer2 = friendPeer2;
+    }
+
+    public List<Recommendation> getRecommendationPeer() {
+        return recommendationPeer;
+    }
+
+    public void setRecommendationPeer(List<Recommendation> recommendationPeer) {
+        this.recommendationPeer = recommendationPeer;
+    }
+
+    public List<Recommendation> getRecommendationRecommendedPeer() {
+        return recommendationRecommendedPeer;
+    }
+
+    public void setRecommendationRecommendedPeer(List<Recommendation> recommendedPeer) {
+        this.recommendationRecommendedPeer = recommendedPeer;
+    }
+
+    public List<TimeTracking> getTimeTrackingPeer() {
+        return timeTrackingPeer;
+    }
+
+    public void setTimeTrackingPeer(List<TimeTracking> timeTrackingPeer) {
+        this.timeTrackingPeer = timeTrackingPeer;
     }
 
     @Override
@@ -89,12 +147,12 @@ public class Peer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Peer peer = (Peer) o;
-        return Objects.equals(nickname, peer.nickname) && Objects.equals(birthday, peer.birthday) && Objects.equals(checks, peer.checks) && Objects.equals(p2pList, peer.p2pList);
+        return Objects.equals(nickname, peer.nickname) && Objects.equals(birthday, peer.birthday) && Objects.equals(checkPeer, peer.checkPeer) && Objects.equals(p2pCheckingPeer, peer.p2pCheckingPeer) && Objects.equals(transferredPointCheckingPeer, peer.transferredPointCheckingPeer) && Objects.equals(transferredPointCheckedPeers, peer.transferredPointCheckedPeers) && Objects.equals(friendPeer1, peer.friendPeer1) && Objects.equals(friendPeer2, peer.friendPeer2) && Objects.equals(recommendationPeer, peer.recommendationPeer) && Objects.equals(recommendationRecommendedPeer, peer.recommendationRecommendedPeer) && Objects.equals(timeTrackingPeer, peer.timeTrackingPeer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nickname, birthday, checks, p2pList);
+        return Objects.hash(nickname, birthday, checkPeer, p2pCheckingPeer, transferredPointCheckingPeer, transferredPointCheckedPeers, friendPeer1, friendPeer2, recommendationPeer, recommendationRecommendedPeer, timeTrackingPeer);
     }
 
     @Override
@@ -102,8 +160,15 @@ public class Peer {
         return "Peer{" +
                 "nickname='" + nickname + '\'' +
                 ", birthday=" + birthday +
-                ", checks=" + checks +
-                ", p2pList=" + p2pList +
+                ", checkPeer=" + checkPeer +
+                ", p2pCheckingPeer=" + p2pCheckingPeer +
+                ", transferredPointCheckingPeer=" + transferredPointCheckingPeer +
+                ", transferredPointCheckedPeers=" + transferredPointCheckedPeers +
+                ", friendPeer1=" + friendPeer1 +
+                ", friendPeer2=" + friendPeer2 +
+                ", recommendationPeer=" + recommendationPeer +
+                ", recommendationRecommendedPeer=" + recommendationRecommendedPeer +
+                ", timeTrackingPeer=" + timeTrackingPeer +
                 '}';
     }
 }
