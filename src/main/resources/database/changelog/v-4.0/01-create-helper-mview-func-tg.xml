@@ -32,7 +32,7 @@
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
-            CREATE OR REPLACE FUNCTION tg_refresh_mv_checks()
+            CREATE OR REPLACE FUNCTION fnc_refresh_mv_checks()
             RETURNS TRIGGER LANGUAGE plpgsql AS $$
             BEGIN
                 REFRESH MATERIALIZED VIEW mv_checks;
@@ -42,13 +42,24 @@
     </changeSet>
 
 <!--    триггер обновления VIEW mv_checks, если обновятся данные в p2p table-->
-    <changeSet id="v-4.0-create-refresh-mv_checks-trg" author="m3mpm">
+    <changeSet id="v-4.0-create-refresh-mv_checks-trg_insert_data_in_p2p" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
             CREATE OR REPLACE TRIGGER tg_refresh_mv_checks AFTER INSERT OR UPDATE OR DELETE
             ON p2p
-            FOR EACH STATEMENT EXECUTE PROCEDURE tg_refresh_mv_checks();
+            FOR EACH STATEMENT EXECUTE PROCEDURE fnc_refresh_mv_checks();
+        </sql>
+    </changeSet>
+
+<!--    триггер обновления VIEW mv_checks, если обновятся данные в verter table-->
+    <changeSet id="v-4.0-create-refresh-mv_checks-trg_insert_data_in_verter" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE TRIGGER tg_refresh_mv_checks AFTER INSERT OR UPDATE OR DELETE
+            ON verter
+            FOR EACH STATEMENT EXECUTE PROCEDURE fnc_refresh_mv_checks();
         </sql>
     </changeSet>
 

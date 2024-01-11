@@ -53,7 +53,7 @@
             CREATE OR REPLACE FUNCTION fnc_task3(IN pdate date)
             RETURNS TABLE (peer VARCHAR) AS $$
                 SELECT peer FROM time_tracking
-                WHERE date = pdate AND state = '1'
+                WHERE date = pdate AND state = 1
                 GROUP BY peer
                 HAVING count(state) = 1;
             $$ LANGUAGE sql;
@@ -575,11 +575,11 @@
                 WITH intime AS(
                     SELECT id, peer, "time"
                     FROM time_tracking
-                    WHERE state = '1' AND "date" = now()::date),
+                    WHERE state = 1 AND "date" = now()::date),
                 outtime AS(
                     SELECT id, peer, "time"
                     FROM time_tracking
-                    WHERE state = '2' AND "date" = now()::date),
+                    WHERE state = 2 AND "date" = now()::date),
                 JOINtable AS (
                     SELECT DISTINCT ON (i.id) i.id AS id1, i.peer AS peer1, i."time" AS time1, o.id AS id2, o.peer AS peer2, o."time" AS time2
                     FROM intime i INNER JOIN outtime o ON i.peer = o.peer AND i."time" &lt; o."time"
@@ -610,7 +610,7 @@
                 SELECT peer
                 FROM(SELECT peer, "date", min("time")
                     FROM time_tracking
-                    WHERE "state" = '1' AND "time" &lt; time_
+                    WHERE "state" = 1 AND "time" &lt; time_
                     GROUP BY 1, 2
                     ORDER BY 2) AS res
                 GROUP BY peer
@@ -631,7 +631,7 @@
                 SELECT peer
                 FROM (SELECT peer, "date", count(*) - 1 AS count_
                       FROM time_tracking
-                      WHERE "state" = '1' AND "date" > (now()::date - Ndays)
+                      WHERE "state" = 1 AND "date" > (now()::date - Ndays)
                       GROUP BY 1, 2
                       ORDER BY 2) AS res
                 GROUP BY peer
@@ -652,7 +652,7 @@
                 SELECT peer
                 FROM (SELECT peer, "date", min("time")
                       FROM time_tracking
-                      WHERE "state" = '1' AND "date" = now()::date
+                      WHERE "state" = 1 AND "date" = now()::date
                       GROUP BY 1, 2
                       ORDER BY 3 DESC
                       LIMIT 1) AS res;
@@ -672,7 +672,7 @@
                 WITH in_ AS (
                     SELECT id, peer, "date", "time"
                     FROM time_tracking tt
-                    WHERE tt.state = '1' AND "date" = current_date - 1
+                    WHERE tt.state = 1 AND "date" = current_date - 1
                     AND NOT tt.time = ( SELECT min("time")
                                         FROM time_tracking tt2
                                         WHERE tt2.date = tt.date AND tt2.peer = tt.peer)
@@ -680,7 +680,7 @@
                 ), out_ AS(
                     SELECT id, peer, "date", "time"
                     FROM time_tracking tt
-                    WHERE tt.state = '2' AND "date" = current_date - 1
+                    WHERE tt.state = 2 AND "date" = current_date - 1
                     AND NOT tt.time = ( SELECT max("time")
                                         FROM time_tracking tt2
                                         WHERE tt2.date = tt.date AND tt2.peer = tt.peer)

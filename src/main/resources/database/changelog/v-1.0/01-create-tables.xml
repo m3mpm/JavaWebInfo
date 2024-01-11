@@ -171,7 +171,7 @@
             <column name="time" type="time">
                 <constraints nullable="false"/>
             </column>
-            <column name="state" type="char">
+            <column name="state" type="integer">
                 <constraints nullable="false"/>
             </column>
         </createTable>
