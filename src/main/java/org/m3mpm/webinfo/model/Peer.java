@@ -37,6 +37,13 @@ public class Peer {
     @OneToMany(mappedBy = "peer2", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friend> friendPeer2 = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "peer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommendation> recommendationPeer = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recommendedPeer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommendation> recommendedPeer = new ArrayList<>();
+
     public Peer() {
     }
 

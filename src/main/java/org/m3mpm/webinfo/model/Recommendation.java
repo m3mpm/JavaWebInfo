@@ -1,19 +1,30 @@
 package org.m3mpm.webinfo.model;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
+@Table(name = "recommendations")
 public class Recommendation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String peer;
+    @ManyToOne
+    @JoinColumn(name = "peer")
+    private Peer peer;
 
-    private String recommendedPeer;
+    @ManyToOne
+    @JoinColumn(name = "recommended_peer")
+    private Peer recommendedPeer;
 
     public Recommendation() {
     }
 
-    public Recommendation(Long id, String peer, String recommendedPeer) {
+    public Recommendation(Long id, Peer peer, Peer recommendedPeer) {
         this.id = id;
         this.peer = peer;
         this.recommendedPeer = recommendedPeer;
@@ -27,19 +38,19 @@ public class Recommendation {
         this.id = id;
     }
 
-    public String getPeer() {
+    public Peer getPeer() {
         return peer;
     }
 
-    public void setPeer(String peer) {
+    public void setPeer(Peer peer) {
         this.peer = peer;
     }
 
-    public String getRecommendedPeer() {
+    public Peer getRecommendedPeer() {
         return recommendedPeer;
     }
 
-    public void setRecommendedPeer(String recommendedPeer) {
+    public void setRecommendedPeer(Peer recommendedPeer) {
         this.recommendedPeer = recommendedPeer;
     }
 
@@ -60,8 +71,8 @@ public class Recommendation {
     public String toString() {
         return "Recommendation{" +
                 "id=" + id +
-                ", peer='" + peer + '\'' +
-                ", recommendedPeer='" + recommendedPeer + '\'' +
+                ", peer=" + peer +
+                ", recommendedPeer=" + recommendedPeer +
                 '}';
     }
 }
