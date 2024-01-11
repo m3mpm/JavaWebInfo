@@ -30,6 +30,13 @@ public class Peer {
     @OneToMany(mappedBy = "checkedPeer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransferredPoint> checkedPeers = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "peer1", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Friend> friendPeer1 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "peer2", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Friend> friendPeer2 = new ArrayList<>();
+
     public Peer() {
     }
 

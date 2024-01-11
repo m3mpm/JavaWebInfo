@@ -1,19 +1,30 @@
 package org.m3mpm.webinfo.model;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
+@Table(name = "friends")
 public class Friend {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String peer1;
+    @ManyToOne
+    @JoinColumn(name = "peer1")
+    private Peer peer1;
 
-    private String peer2;
+    @ManyToOne
+    @JoinColumn(name = "peer2")
+    private Peer peer2;
 
     public Friend() {
     }
 
-    public Friend(Long id, String peer1, String peer2) {
+    public Friend(Long id, Peer peer1, Peer peer2) {
         this.id = id;
         this.peer1 = peer1;
         this.peer2 = peer2;
@@ -27,19 +38,19 @@ public class Friend {
         this.id = id;
     }
 
-    public String getPeer1() {
+    public Peer getPeer1() {
         return peer1;
     }
 
-    public void setPeer1(String peer1) {
+    public void setPeer1(Peer peer1) {
         this.peer1 = peer1;
     }
 
-    public String getPeer2() {
+    public Peer getPeer2() {
         return peer2;
     }
 
-    public void setPeer2(String peer2) {
+    public void setPeer2(Peer peer2) {
         this.peer2 = peer2;
     }
 
@@ -60,8 +71,8 @@ public class Friend {
     public String toString() {
         return "Friend{" +
                 "id=" + id +
-                ", peer1='" + peer1 + '\'' +
-                ", peer2='" + peer2 + '\'' +
+                ", peer1=" + peer1 +
+                ", peer2=" + peer2 +
                 '}';
     }
 }
