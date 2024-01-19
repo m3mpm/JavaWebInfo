@@ -5,8 +5,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Show Peers Table</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -24,6 +24,9 @@
     <div class="block">
         <h2>Peers Table</h2>
         <h3>List all Peers</h3>
+        <div>
+            <a th:href="@{/peers/add}">Add New Peer</a>
+        </div>
         <table>
             <thead>
             <tr>
@@ -39,14 +42,15 @@
                 <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}"></a></td>
                 <td th:text="${peer.birthday}"></td>
                 <td>
-                    <a href="/edit?id=${customer.id}">Edit</a>
-                    <a href="/delete?id=${customer.id}">Delete</a>
+<!--                    <a href="/edit?id=${customer.id}">Edit</a>-->
+                    <a th:href="@{peers/delete/{nickname}(nickname=${peer.nickname})}">Delete</a>
                 </td>
             </tr>
             </tbody>
         </table>
-
-        <a href="/">Back to welcome page</a>
+        <div>
+            <a href="/">Back to welcome page</a>
+        </div>
 
     </div>
 </div>

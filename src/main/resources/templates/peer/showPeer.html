@@ -5,32 +5,25 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Show Peer</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <div class="parent">
     <div class="block">
         <h2>Peers Info</h2>
-        <h3>Peer</h3>
         <table>
             <thead>
             <tr>
-                <th>ID</th>
                 <th>Имя</th>
                 <th>Дата рождения</th>
-                <th>Action</th>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <td th:text="${peer.nickname}"></td>
                 <td th:text="${peer.birthday}"></td>
-                <td>
-                    <a href="/edit?id=${customer.id}">Edit</a>
-                    <a href="/delete?id=${customer.id}">Delete</a>
-                </td>
             </tr>
             </tbody>
         </table>

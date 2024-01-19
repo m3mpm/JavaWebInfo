@@ -22,7 +22,16 @@ public class PeerService {
     }
 
     public Peer getPeer(String nickname){
-        return peerRepository.findAll().stream().filter(peer -> peer.getNickname().equals(nickname)).findAny().orElse(null);
+//        return peerRepository.findAll().stream().filter(peer -> peer.getNickname().equals(nickname)).findAny().orElse(null);
+        return peerRepository.getReferenceById(nickname);
+    }
+
+    public void savePeer(Peer peer){
+        peerRepository.saveAndFlush(peer);
+    }
+
+    public void deletePeer(Peer peer) {
+        peerRepository.delete(peer);
     }
 
 //    public Peer addNewPeer(Peer peer){

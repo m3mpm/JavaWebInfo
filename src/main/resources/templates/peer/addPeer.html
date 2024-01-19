@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add New Peer</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+
+
+<!--<h3>Add new peer</h3>-->
+<!--<form th:action="@{/peers}" th:object="${emptyPeer}" th:method="post">-->
+<!--    <input type="text" name="nickname" th:field="*{nickname}" placeholder="Введите имя пира"></input>-->
+<!--    <input type="date" name="birthday" th:field="*{birthday}" id="" placeholder="Введите дату рождения: ГГГГ-ММ-ДД"></input>-->
+<!--    <button type="submit">Добавить в пира</button>-->
+<!--</form>-->
+
+
+<div class="parent">
+    <div class="block">
+        <h3>New Peer</h3>
+        <form th:action="@{/peers/add}" th:method="post" th:object="${addPeerDto}">
+            <div>
+                <label for="nickname">Name</label>
+                <input type="text" th:field="*{nickname}" id="nickname">
+                <br>
+                <label for="birthday">Birthday</label>
+                <input type="date" th:field="*{birthday}" id="birthday">
+                <br>
+                <input type="submit" value="addPeer">
+            </div>
+        </form>
+        <div>
+            <a href="/peers">Back to list of Peers</a>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

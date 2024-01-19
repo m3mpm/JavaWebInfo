@@ -7,12 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,13 +37,24 @@ public class PeerController {
         return "peer/showPeer";
     }
 
+    @GetMapping("/add")
+    public String newPeer(@ModelAttribute("addPeerDto") PeerDto dto){
+        return "/peer/addPeer";
+    }
 
-//    @PostMapping
-//    public String addNewPeer(Peer peer, Model model){
-//        Peer emptyPeer = new Peer();
-//        peerService.addNewPeer(peer);
-//        return "redirect:/peers";
-//    }
+    @PostMapping("/add")
+    public String addPeer(@ModelAttribute("addPeerDto") PeerDto dto){
+        peerService.savePeer(convertToPeer(dto));
+        return "redirect:/peers";
+    }
+
+    @DeleteMapping("/delete/{nickname}")
+    public String deletePeer(@PathVariable("nickname") String nickname){
+        if (nickname != null){
+            peerService.deletePeer(peerService.getPeer(nickname));
+        }
+        return "redirect:/peers";
+    }
 
     private PeerDto convertToPeerDto(Peer peer){
         return modelMapper.map(peer, PeerDto.class);
