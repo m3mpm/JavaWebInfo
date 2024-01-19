@@ -10,20 +10,10 @@
 </head>
 <body>
 
-
-
-<!--<h3>Add new peer</h3>-->
-<!--<form th:action="@{/peers}" th:object="${emptyPeer}" th:method="post">-->
-<!--    <input type="text" name="nickname" th:field="*{nickname}" placeholder="Введите имя пира"></input>-->
-<!--    <input type="date" name="birthday" th:field="*{birthday}" id="" placeholder="Введите дату рождения: ГГГГ-ММ-ДД"></input>-->
-<!--    <button type="submit">Добавить в пира</button>-->
-<!--</form>-->
-
-
 <div class="parent">
     <div class="block">
-        <h2>Peers Table</h2>
-        <h3>List all Peers</h3>
+        <h2>Peers Info</h2>
+        <h3>Peer</h3>
         <table>
             <thead>
             <tr>
@@ -34,9 +24,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="peer,iter : ${listPeers}">
-                <td th:text="${iter.index} + 1"></td>
-                <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}"></a></td>
+            <tr>
+                <td th:text="${peer.nickname}"></td>
                 <td th:text="${peer.birthday}"></td>
                 <td>
                     <a href="/edit?id=${customer.id}">Edit</a>
@@ -46,7 +35,7 @@
             </tbody>
         </table>
 
-        <a href="/">Back to welcome page</a>
+        <a href="/peers">Back to list of Peers</a>
 
     </div>
 </div>

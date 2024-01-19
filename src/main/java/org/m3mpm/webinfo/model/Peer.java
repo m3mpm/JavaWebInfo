@@ -13,7 +13,8 @@ import java.util.Objects;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+//@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@NoArgsConstructor(force = true)
 @Entity
 @Table(name = "peers")
 public class Peer {
