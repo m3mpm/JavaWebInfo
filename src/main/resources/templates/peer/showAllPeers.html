@@ -10,16 +10,6 @@
 </head>
 <body>
 
-
-
-<!--<h3>Add new peer</h3>-->
-<!--<form th:action="@{/peers}" th:object="${emptyPeer}" th:method="post">-->
-<!--    <input type="text" name="nickname" th:field="*{nickname}" placeholder="Введите имя пира"></input>-->
-<!--    <input type="date" name="birthday" th:field="*{birthday}" id="" placeholder="Введите дату рождения: ГГГГ-ММ-ДД"></input>-->
-<!--    <button type="submit">Добавить в пира</button>-->
-<!--</form>-->
-
-
 <div class="parent">
     <div class="block">
         <h2>Peers Table</h2>
@@ -42,7 +32,7 @@
                 <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}"></a></td>
                 <td th:text="${peer.birthday}"></td>
                 <td>
-<!--                    <a href="/edit?id=${customer.id}">Edit</a>-->
+                    <a th:href="@{peers/edit/{nickname}(nickname=${peer.nickname})}">Edit</a>
                     <a th:href="@{peers/delete/{nickname}(nickname=${peer.nickname})}">Delete</a>
                 </td>
             </tr>

@@ -4,8 +4,11 @@ package org.m3mpm.webinfo.service;
 import org.m3mpm.webinfo.model.Peer;
 import org.m3mpm.webinfo.repository.PeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,8 +30,12 @@ public class PeerService {
     }
 
     public void savePeer(Peer peer){
-        peerRepository.saveAndFlush(peer);
+        peerRepository.save(peer);
     }
+
+    @Modifying
+    @Query("update Peer p set p.nickname = ?1, p.birthday = ?2 where p.nickname = ?1")
+    public void updatePeer(String nickname, LocalDate birthday){}
 
     public void deletePeer(Peer peer) {
         peerRepository.delete(peer);
