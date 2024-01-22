@@ -58,17 +58,24 @@ public class PeerController {
     public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") PeerDto peerDto){
         if (peerDto.getBirthday() == null) peerDto.setBirthday(peerService.getPeer(nickname).getBirthday());
         Peer peer = convertToPeer(peerDto);
-        peerService.updatePeer(peer.getNickname(),peer.getBirthday());
+        peerService.updatePeer(nickname,peer.getNickname(),peer.getBirthday());
         return "redirect:/peers";
     }
 
-//    @DeleteMapping("/delete/{nickname}")
-//    public String deletePeer(@PathVariable("nickname") String nickname){
-//        if (nickname != null){
-//            peerService.deletePeer(peerService.getPeer(nickname));
-//        }
+//    @PostMapping("/edit/{nickname}")
+//    public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") PeerDto peerDto){
+//        if (peerDto.getBirthday() == null) peerDto.setBirthday(peerService.getPeer(nickname).getBirthday());
+//        Peer peer = convertToPeer(peerDto);
+//        peerService.updatePeer(peer);
 //        return "redirect:/peers";
 //    }
+
+    @PostMapping("/delete")
+    public String deletePeer(@ModelAttribute("deletedPeer") PeerDto peerDto){
+        Peer peer = convertToPeer(peerDto);
+        peerService.deletePeer(peer);
+        return "redirect:/peers";
+    }
 
     private PeerDto convertToPeerDto(Peer peer){
         return modelMapper.map(peer, PeerDto.class);

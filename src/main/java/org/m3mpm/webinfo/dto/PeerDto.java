@@ -11,4 +11,12 @@ import java.time.LocalDate;
 public class PeerDto {
     private String nickname;
     private LocalDate birthday;
+
+    @Override
+    public String toString() {
+        return "PeerDto{" +
+                "nickname='" + nickname + '\'' +
+                ", birthday=" + birthday +
+                '}';
+    }
 }

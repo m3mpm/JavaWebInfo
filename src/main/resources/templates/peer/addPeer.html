@@ -16,10 +16,10 @@
         <form th:action="@{/peers/add}" th:method="post" th:object="${addPeerDto}">
             <div>
                 <label for="nickname">Name</label>
-                <input type="text" th:field="*{nickname}" id="nickname">
+                <input type="text" th:field="*{nickname}" id="nickname" placeholder="Nickname">
                 <br>
                 <label for="birthday">Birthday</label>
-                <input type="date" th:field="*{birthday}" id="birthday">
+                <input type="text" th:field="*{birthday}" id="birthday" placeholder="YYYY-MM-DD">
                 <br>
                 <input type="submit" value="Add Peer">
             </div>

@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+
 
 @Service
 public class PeerService {
@@ -33,9 +35,14 @@ public class PeerService {
         peerRepository.save(peer);
     }
 
-    @Modifying
-    @Query("update Peer p set p.nickname = ?1, p.birthday = ?2 where p.nickname = ?1")
-    public void updatePeer(String nickname, LocalDate birthday){}
+    @Transactional
+    public void updatePeer(String find_nickname, String nickname, LocalDate birthday){
+        peerRepository.updatePeer(find_nickname,nickname,birthday);
+    }
+
+//    public void updatePeer(Peer peer){
+//        peerRepository.saveAndFlush(peer);
+//    }
 
     public void deletePeer(Peer peer) {
         peerRepository.delete(peer);
