@@ -12,16 +12,14 @@
 
 <div class="parent">
     <div class="block">
-        <h3>Update Peer</h3>
+        <h3>Edit Peer</h3>
         <form th:action="@{/peers/edit/{nickname}(nickname=${editPeerDto.nickname})}" th:method="post" th:object="${editPeerDto}">
             <div>
                 <label for="nickname">Name</label>
                 <input type="text" th:field="*{nickname}" id="nickname">
                 <br>
-                <p th:text="${editPeerDto.birthday}">birthday</p>
-                <br>
                 <label for="birthday">Birthday</label>
-                <input type="text" th:field="*{birthday}" th:value="${editPeerDto.birthday}" id="birthday">
+                <input type="date" th:field="*{birthday}" id="birthday">
                 <br>
                 <input type="submit" value="Edit Peer">
             </div>

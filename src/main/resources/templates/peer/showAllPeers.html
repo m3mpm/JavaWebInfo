@@ -23,7 +23,7 @@
                 <th>ID</th>
                 <th>Имя</th>
                 <th>Дата рождения</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -32,8 +32,7 @@
                 <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}"></a></td>
                 <td th:text="${peer.birthday}"></td>
                 <td>
-                    <a th:href="@{peers/edit/{nickname}(nickname=${peer.nickname})}">Edit</a>
-<!--                    <a th:href="@{peers/delete/{nickname}(nickname=${peer.nickname})}">Delete</a>-->
+                    <button> <a th:href="@{peers/edit/{nickname}(nickname=${peer.nickname})}">Edit</a></button>
                 </td>
                 <td>
                     <form th:action="@{/peers/delete}" th:method="post" th:object="${deletedPeer}">

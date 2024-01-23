@@ -56,7 +56,6 @@ public class PeerController {
 
     @PostMapping("/edit/{nickname}")
     public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") PeerDto peerDto){
-        if (peerDto.getBirthday() == null) peerDto.setBirthday(peerService.getPeer(nickname).getBirthday());
         Peer peer = convertToPeer(peerDto);
         peerService.updatePeer(nickname,peer.getNickname(),peer.getBirthday());
         return "redirect:/peers";
