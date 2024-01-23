@@ -40,15 +40,12 @@ public class PeerService {
         peerRepository.updatePeer(find_nickname,nickname,birthday);
     }
 
-//    public void updatePeer(Peer peer){
-//        peerRepository.saveAndFlush(peer);
-//    }
+    public void updatePeer(String nickname, Peer peer){
+        peerRepository.save(peer);
+    }
 
     public void deletePeer(Peer peer) {
         peerRepository.delete(peer);
     }
-
-//    public Peer addNewPeer(Peer peer){
-//        return peerRepository.save(peer);
-//    }
+    
 }

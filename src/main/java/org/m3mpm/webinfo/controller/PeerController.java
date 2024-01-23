@@ -1,6 +1,7 @@
 package org.m3mpm.webinfo.controller;
 
 import org.m3mpm.webinfo.dto.PeerDto;
+import org.m3mpm.webinfo.mapper.PeerMapper;
 import org.m3mpm.webinfo.model.Peer;
 import org.m3mpm.webinfo.service.PeerService;
 import org.modelmapper.ModelMapper;
@@ -16,24 +17,24 @@ import java.util.stream.Collectors;
 @RequestMapping("/peers")
 public class PeerController {
     private final PeerService peerService;
-    private final ModelMapper modelMapper;
+    private final PeerMapper peerMapper;
 
     @Autowired
-    public PeerController(PeerService peerService, ModelMapper modelMapper) {
+    public PeerController(PeerService peerService, PeerMapper peerMapper) {
         this.peerService = peerService;
-        this.modelMapper = modelMapper;
+        this.peerMapper = peerMapper;
     }
 
     @GetMapping()
     public String showAllPeers(Model model){
-        List<PeerDto> listPeers = peerService.getAllPeers().stream().map(this::convertToPeerDto).collect(Collectors.toList());
+        List<PeerDto> listPeers = peerService.getAllPeers().stream().map(peerMapper::convertToPeerDto).collect(Collectors.toList());
         model.addAttribute("listPeers", listPeers);
         return "peer/showAllPeers";
     }
 
     @GetMapping("/{nickname}")
     public String showPeer(@PathVariable("nickname") String nickname, Model model){
-        model.addAttribute("peer",convertToPeerDto(peerService.getPeer(nickname)));
+        model.addAttribute("peer",peerMapper.convertToPeerDto(peerService.getPeer(nickname)));
         return "peer/showPeer";
     }
 
@@ -44,43 +45,42 @@ public class PeerController {
 
     @PostMapping("/add")
     public String addPeer(@ModelAttribute("addPeerDto") PeerDto peerDto){
-        peerService.savePeer(convertToPeer(peerDto));
+        peerService.savePeer(peerMapper.convertToPeer(peerDto));
         return "redirect:/peers";
     }
 
     @GetMapping("/edit/{nickname}")
     public String editPeer(@PathVariable("nickname") String nickname, Model model){
-        model.addAttribute("editPeerDto",convertToPeerDto(peerService.getPeer(nickname)));
+        model.addAttribute("editPeerDto",peerMapper.convertToPeerDto(peerService.getPeer(nickname)));
         return "/peer/editPeer";
     }
 
     @PostMapping("/edit/{nickname}")
     public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") PeerDto peerDto){
-        Peer peer = convertToPeer(peerDto);
+        Peer peer = peerMapper.convertToPeer(peerDto);
         peerService.updatePeer(nickname,peer.getNickname(),peer.getBirthday());
         return "redirect:/peers";
     }
 
 //    @PostMapping("/edit/{nickname}")
 //    public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") PeerDto peerDto){
-//        if (peerDto.getBirthday() == null) peerDto.setBirthday(peerService.getPeer(nickname).getBirthday());
-//        Peer peer = convertToPeer(peerDto);
-//        peerService.updatePeer(peer);
+//        Peer peer = peerMapper.convertToPeer(peerDto);
+//        peerService.updatePeer(nickname,peer);
 //        return "redirect:/peers";
 //    }
 
     @PostMapping("/delete")
     public String deletePeer(@ModelAttribute("deletedPeer") PeerDto peerDto){
-        Peer peer = convertToPeer(peerDto);
+        Peer peer = peerMapper.convertToPeer(peerDto);
         peerService.deletePeer(peer);
         return "redirect:/peers";
     }
 
-    private PeerDto convertToPeerDto(Peer peer){
-        return modelMapper.map(peer, PeerDto.class);
-    }
-
-    private Peer convertToPeer(PeerDto peerDto){
-        return modelMapper.map(peerDto, Peer.class);
-    }
+//    private PeerDto convertToPeerDto(Peer peer){
+//        return modelMapper.map(peer, PeerDto.class);
+//    }
+//
+//    private Peer convertToPeer(PeerDto peerDto){
+//        return modelMapper.map(peerDto, Peer.class);
+//    }
 }
