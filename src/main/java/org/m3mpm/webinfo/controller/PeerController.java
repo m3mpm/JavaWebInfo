@@ -1,5 +1,6 @@
 package org.m3mpm.webinfo.controller;
 
+import jakarta.validation.Valid;
 import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.mapper.PeerMapper;
 import org.m3mpm.webinfo.model.Peer;
@@ -8,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +46,10 @@ public class PeerController {
     }
 
     @PostMapping("/add")
-    public String addPeer(@ModelAttribute("addPeerDto") PeerDto peerDto){
+    public String addPeer(@ModelAttribute("addPeerDto") @Valid PeerDto peerDto, Errors errors){
+        if (errors.hasErrors()){
+            return "/peer/addPeer";
+        }
         peerService.savePeer(peerMapper.convertToPeer(peerDto));
         return "redirect:/peers";
     }

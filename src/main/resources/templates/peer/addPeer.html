@@ -13,13 +13,22 @@
 <div class="parent">
     <div class="block">
         <h3>New Peer</h3>
+
+<!--        <div th:if="${#fields.hasAnyErrors()}" >-->
+<!--                <span class="validationError">-->
+<!--                    Please correct the problems below and resubmit.-->
+<!--                </span>-->
+<!--        </div>-->
+
         <form th:action="@{/peers/add}" th:method="post" th:object="${addPeerDto}">
             <div>
                 <label for="nickname">Name</label>
                 <input type="text" th:field="*{nickname}" id="nickname" placeholder="Nickname">
+                <span class="validationError" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Name Error</span>
                 <br>
                 <label for="birthday">Birthday</label>
                 <input type="date" th:field="*{birthday}" id="birthday" placeholder="YYYY-MM-DD">
+                <span class="validationError" th:if="${#fields.hasErrors('birthday')}">Birthday is required</span>
                 <br>
                 <input type="submit" value="Add Peer">
             </div>
