@@ -76,11 +76,4 @@ public class PeerController {
         return "redirect:/peers";
     }
 
-//    private PeerDto convertToPeerDto(Peer peer){
-//        return modelMapper.map(peer, PeerDto.class);
-//    }
-//
-//    private Peer convertToPeer(PeerDto peerDto){
-//        return modelMapper.map(peerDto, Peer.class);
-//    }
 }
