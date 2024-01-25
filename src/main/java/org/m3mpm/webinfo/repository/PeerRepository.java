@@ -9,6 +9,6 @@ import java.time.LocalDate;
 
 public interface PeerRepository extends JpaRepository<Peer,String> {
     @Modifying
-    @Query("update Peer p set p.nickname = ?2, p.birthday = ?3 where p.nickname = ?1")
-    public void updatePeer(String find_nickname, String nickname, LocalDate birthday);
+    @Query("update Peer p set p.nickname = ?1, p.birthday = ?2 where p.nickname = ?3")
+    public void updatePeer(String newNickname, LocalDate newBirthday, String findNickname);
 }

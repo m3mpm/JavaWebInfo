@@ -5,7 +5,6 @@ import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.mapper.PeerMapper;
 import org.m3mpm.webinfo.model.Peer;
 import org.m3mpm.webinfo.service.PeerService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,7 +62,7 @@ public class PeerController {
     @PostMapping("/edit/{nickname}")
     public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") PeerDto peerDto){
         Peer peer = peerMapper.convertToPeer(peerDto);
-        peerService.updatePeer(nickname,peer.getNickname(),peer.getBirthday());
+        peerService.updatePeer(peer.getNickname(), peer.getBirthday(), nickname);
         return "redirect:/peers";
     }
 

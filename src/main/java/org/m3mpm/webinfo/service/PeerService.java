@@ -36,8 +36,8 @@ public class PeerService {
     }
 
     @Transactional
-    public void updatePeer(String find_nickname, String nickname, LocalDate birthday){
-        peerRepository.updatePeer(find_nickname,nickname,birthday);
+    public void updatePeer(String newNickname, LocalDate newBirthday, String findNickname){
+        peerRepository.updatePeer(newNickname,newBirthday,findNickname);
     }
 
     public void updatePeer(String nickname, Peer peer){
