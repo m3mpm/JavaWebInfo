@@ -45,9 +45,9 @@ public class PeerService {
     }
 
     @Transactional
-    public void updatePeer(Peer peer){
-        if (peerRepository.existsById(peer.getNickname())){
-            peerRepository.save(peer);
+    public void updatePeer(String nickname, Peer updatedPeer){
+        if (peerRepository.existsById(nickname)){
+            peerRepository.save(updatedPeer);
         }
     }
 

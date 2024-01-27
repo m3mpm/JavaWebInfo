@@ -75,7 +75,7 @@ public class PeerController {
             return "/peer/editPeer";
         }
         Peer peer = peerMapper.convertToPeer(peerDto);
-        peerService.updatePeer(peer);
+        peerService.updatePeer(nickname,peer);
         return "redirect:/peers";
     }
 

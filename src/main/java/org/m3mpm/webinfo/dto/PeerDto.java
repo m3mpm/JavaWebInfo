@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class PeerDto {
+
     @NotBlank(message = "Nickname is required")
     private String nickname;
 
