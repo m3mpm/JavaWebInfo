@@ -28,9 +28,9 @@
             </thead>
             <tbody>
             <tr th:each="peer,iter : ${listPeers}">
-                <td th:text="${iter.index} + 1"></td>
-                <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}"></a></td>
-                <td th:text="${peer.birthday}"></td>
+                <td th:text="${iter.index} + 1">ID</td>
+                <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}">Nickname</a></td>
+                <td th:text="${peer.birthday}">Birthday</td>
                 <td>
                     <button> <a th:href="@{peers/edit/{nickname}(nickname=${peer.nickname})}">Edit</a></button>
                 </td>
