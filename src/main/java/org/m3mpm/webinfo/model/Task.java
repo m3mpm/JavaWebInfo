@@ -13,7 +13,8 @@ import java.util.Objects;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE,force = true)
+//@NoArgsConstructor(access = AccessLevel.PRIVATE,force = true)
+@NoArgsConstructor(force = true)
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -22,8 +23,9 @@ public class Task {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "parent_task")
-    private String parentTask;
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "parent_task", referencedColumnName = "title")
+    private Task parentTask;
 
     @Column(name = "max_xp")
     private Integer maxXp;
