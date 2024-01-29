@@ -1,0 +1,61 @@
+package org.m3mpm.webinfo.controller;
+
+import org.m3mpm.webinfo.dto.TaskDto;
+import org.m3mpm.webinfo.mapper.TaskMapper;
+import org.m3mpm.webinfo.model.Task;
+import org.m3mpm.webinfo.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+
+@Controller
+@RequestMapping("/tasks")
+public class TaskController {
+
+    private final TaskService taskService;
+
+    private final TaskMapper taskMapper;
+
+    @Autowired
+    public TaskController(TaskService taskService, TaskMapper taskMapper) {
+        this.taskService = taskService;
+        this.taskMapper = taskMapper;
+    }
+
+    @GetMapping()
+    public String showAllTasks(Model model){
+        List<TaskDto> listTasks = taskService.getAllTasks().stream().map(taskMapper::converToTaskDto).collect(Collectors.toList());
+        model.addAttribute("listTask",listTasks);
+        return "task/showAllTasks";
+    }
+
+    @GetMapping("/{title}")
+    public String showTask(@PathVariable("title") String title, Model model){
+        model.addAttribute("task", taskMapper.converToTaskDto(taskService.getTask(title)));
+        return "task/showTask";
+    }
+
+    @GetMapping("/add")
+    public String newTask(@ModelAttribute("addTaskDto") TaskDto taskDto){
+        return "task/addTask";
+    }
+
+    @PostMapping("/add")
+    public String addTask(@ModelAttribute("addTaskDto") TaskDto taskDto){
+        taskService.saveTask(taskMapper.converToTask(taskDto));
+        return "redirect:/tasks";
+    }
+
+    @PostMapping("/delete")
+    public String deleteTask(@ModelAttribute("deletedTask") TaskDto taskDto){
+        Task task = taskMapper.converToTask(taskDto);
+        taskService.deleteTask(task);
+        return "redirect:/tasks";
+    }
+
+}
