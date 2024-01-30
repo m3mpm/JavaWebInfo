@@ -39,9 +39,8 @@ public class TaskMapper {
     }
 
     void mapSpecificFields(Task source, TaskDto destination){
-//        Task parentTask = source.getParentTask();
-//        if(parentTask != null ) destination.setParentTask(parentTask.getTitle());
-        destination.setParentTask(Objects.isNull(source) ? null : source.getTitle());
+        Task parentTask = source.getParentTask();
+        if(parentTask != null ) destination.setParentTask(parentTask.getTitle());
     }
 
     protected Converter<TaskDto, Task> toTaskConverter() {

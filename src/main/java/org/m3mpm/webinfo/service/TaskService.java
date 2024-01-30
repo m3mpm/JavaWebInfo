@@ -5,6 +5,7 @@ import org.m3mpm.webinfo.model.Task;
 import org.m3mpm.webinfo.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,14 @@ public class TaskService {
 
     public void deleteTask(Task task){
         taskRepository.delete(task);
+    }
+
+    @Transactional
+    public void updateTask(String title, Task updatedTask){
+        if (taskRepository.existsById(title)){
+            System.out.println(taskRepository.existsById(title));
+            taskRepository.save(updatedTask);
+        }
     }
 
     public boolean isExistsById(String title){
