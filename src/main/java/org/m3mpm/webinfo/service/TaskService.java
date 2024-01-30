@@ -33,4 +33,8 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
+    public boolean isExistsById(String title){
+        return taskRepository.existsById(title);
+    }
+
 }

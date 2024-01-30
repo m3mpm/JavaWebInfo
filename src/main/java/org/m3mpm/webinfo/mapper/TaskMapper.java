@@ -1,7 +1,9 @@
 package org.m3mpm.webinfo.mapper;
 
+import jakarta.annotation.PostConstruct;
 import org.m3mpm.webinfo.dto.TaskDto;
 import org.m3mpm.webinfo.model.Task;
+import org.m3mpm.webinfo.service.TaskService;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +15,16 @@ import java.util.Objects;
 public class TaskMapper {
 
     private final ModelMapper modelMapper;
+    private final TaskService taskService;
 
     @Autowired
-    public TaskMapper(ModelMapper modelMapper) {
+    public TaskMapper(ModelMapper modelMapper, TaskService taskService) {
         this.modelMapper = modelMapper;
+        this.taskService = taskService;
     }
-    
-    public void setupMapper(){
+
+    @PostConstruct
+    protected void setupMapper(){
         modelMapper.createTypeMap(Task.class,TaskDto.class).addMappings(m->m.skip(TaskDto::setParentTask)).setPostConverter(toTaskDtoConverter());
         modelMapper.createTypeMap(TaskDto.class,Task.class).addMappings(m->m.skip(Task::setParentTask)).setPostConverter(toTaskConverter());
     }
@@ -50,7 +55,8 @@ public class TaskMapper {
 
     void mapSpecificFields(TaskDto source, Task destination)  {
         String parentName = source.getParentTask();
-        if (parentName == null || parentName.isEmpty()) {
+        boolean isExistsById = taskService.isExistsById(parentName);
+        if (parentName == null || parentName.isEmpty() || !isExistsById) {
             destination.setParentTask(null);
         } else {
             Task parentTask = new Task();
@@ -59,15 +65,6 @@ public class TaskMapper {
         }
     }
 
-//    public void mapSpecificFields(Droid source, DroidDto destination) {
-//        destination.setUnicornId(Objects.isNull(source) || Objects.isNull(source.getId()) ? null : source.getUnicorn().getId());
-//    }
-
-//    void mapSpecificFields(DroidDto source, Droid destination) {
-//        destination.setUnicorn(unicornRepository.findById(source.getUnicornId()).orElse(null));
-//    }
-
-
     public TaskDto converToTaskDto(Task task) {
         return modelMapper.map(task,TaskDto.class);
     }
@@ -75,4 +72,6 @@ public class TaskMapper {
     public Task converToTask(TaskDto taskDto){
         return modelMapper.map(taskDto,Task.class);
     }
+
+
 }
