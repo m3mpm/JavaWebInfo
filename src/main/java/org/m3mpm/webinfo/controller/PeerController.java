@@ -54,10 +54,27 @@ public class PeerController {
         return "redirect:/peers";
     }
 
+    @PostMapping("/delete")
+    public String deletePeer(@ModelAttribute("deletedPeer") PeerDto peerDto){
+        Peer peer = peerMapper.convertToPeer(peerDto);
+        peerService.deletePeer(peer);
+        return "redirect:/peers";
+    }
+
     @GetMapping("/edit/{nickname}")
     public String editPeer(@PathVariable("nickname") String nickname, Model model){
         model.addAttribute("editPeerDto",peerMapper.convertToPeerDto(peerService.getPeer(nickname)));
         return "/peer/editPeer";
+    }
+
+    @PostMapping("/edit/{nickname}")
+    public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") @Valid PeerDto peerDto, Errors errors){
+        if (errors.hasErrors()){
+            return "/peer/editPeer";
+        }
+        Peer peer = peerMapper.convertToPeer(peerDto);
+        peerService.updatePeer(nickname,peer);
+        return "redirect:/peers";
     }
 
 //    @PostMapping("/edit/{nickname}")
@@ -70,21 +87,5 @@ public class PeerController {
 //        return "redirect:/peers";
 //    }
 
-    @PostMapping("/edit/{nickname}")
-    public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") @Valid PeerDto peerDto, Errors errors){
-        if (errors.hasErrors()){
-            return "/peer/editPeer";
-        }
-        Peer peer = peerMapper.convertToPeer(peerDto);
-        peerService.updatePeer(nickname,peer);
-        return "redirect:/peers";
-    }
-
-    @PostMapping("/delete")
-    public String deletePeer(@ModelAttribute("deletedPeer") PeerDto peerDto){
-        Peer peer = peerMapper.convertToPeer(peerDto);
-        peerService.deletePeer(peer);
-        return "redirect:/peers";
-    }
 
 }
