@@ -35,13 +35,8 @@ public class PeerService {
         peerRepository.save(peer);
     }
 
-//    @Transactional
-//    public void updatePeer(String newNickname, LocalDate newBirthday, String findNickname){
-//        peerRepository.updatePeer(newNickname,newBirthday,findNickname);
-//    }
-
-    public boolean isExistsById(String nickname){
-        return peerRepository.existsById(nickname);
+    public void deletePeer(Peer peer) {
+        peerRepository.delete(peer);
     }
 
     @Transactional
@@ -51,8 +46,13 @@ public class PeerService {
         }
     }
 
-    public void deletePeer(Peer peer) {
-        peerRepository.delete(peer);
+//    @Transactional
+//    public void updatePeer(String newNickname, LocalDate newBirthday, String findNickname){
+//        peerRepository.updatePeer(newNickname,newBirthday,findNickname);
+//    }
+
+    public boolean isExistsById(String nickname){
+        return peerRepository.existsById(nickname);
     }
     
 }
