@@ -5,16 +5,16 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add New Task</title>
+    <title>Edit Task</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <div class="parent">
     <div class="block">
-        <h3>New Task</h3>
+        <h3>Edit Task</h3>
 
-        <form th:action="@{/tasks/add}" th:method="post" th:object="${addTaskDto}">
+        <form th:action="@{/tasks/edit/{title}(title=${editTaskDto.title})}" th:method="post" th:object="${editTaskDto}">
 
             <div th:if="${#fields.hasAnyErrors()}" >
                     <span class="validationError">
@@ -24,7 +24,7 @@
 
             <div>
                 <label for="title">Title</label>
-                <input type="text" th:field="*{title}" id="title" placeholder="Title" th:name="title">
+                <input type="text" th:field="*{title}" id="title" placeholder="Title" readonly>
                 <span class="validationError" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</span>
                 <br>
                 <label for="parentTask">Parent Task</label>
@@ -34,7 +34,7 @@
                 <input type="number" th:field="*{maxXp}" id="maxXp" placeholder="Max Xp" min="0" value="0">
                 <span class="validationError" th:if="${#fields.hasErrors('maxXp')}" th:errors="*{maxXp}">Xp error</span>
                 <br>
-                <input type="submit" value="Add Task">
+                <input type="submit" value="Edit Task">
             </div>
 
         </form>
