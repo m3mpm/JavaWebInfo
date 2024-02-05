@@ -36,12 +36,8 @@ public abstract class TaskMapper {
 
     @Named("mapStringToParentTask")
     Task mapStringToParentTask(String title){
-        if(title == null || title.isEmpty()) {
-            return null;
-        } else if (!taskService.isExistsById(title)){
+        if(title == null || title.isEmpty() || !taskService.isExistsById(title))
             return  null;
-        } else {
-            return taskService.getTask(title);
-        }
+        return taskService.getTask(title);
     }
 }

@@ -38,6 +38,11 @@ public class TaskService {
     @Transactional
     public void updateTask(String title, Task updatedTask){
         if (taskRepository.existsById(title)){
+            if(updatedTask.getParentTask() != null){
+                if(title.equals(updatedTask.getParentTask().getTitle())){
+                    updatedTask.setParentTask(null);
+                }
+            }
             taskRepository.save(updatedTask);
         }
     }
