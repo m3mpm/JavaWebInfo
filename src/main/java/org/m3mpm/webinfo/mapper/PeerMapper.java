@@ -1,26 +1,17 @@
 package org.m3mpm.webinfo.mapper;
 
-
 import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.model.Peer;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Component
-public class PeerMapper {
-    private final ModelMapper modelMapper;
+@Mapper(componentModel = "spring")
+public abstract class PeerMapper {
+    public abstract PeerDto convertToPeerDto(Peer peer);
+    public abstract Peer convertToPeer(PeerDto peerDto);
 
-    @Autowired
-    public PeerMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
-
-    public PeerDto convertToPeerDto(Peer peer){
-        return modelMapper.map(peer, PeerDto.class);
-    }
-
-    public Peer convertToPeer(PeerDto peerDto){
-        return modelMapper.map(peerDto, Peer.class);
-    }
+    @BeanMapping (nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public abstract void updatePeerFromDto(PeerDto peerDto, @MappingTarget Peer peer);
 }

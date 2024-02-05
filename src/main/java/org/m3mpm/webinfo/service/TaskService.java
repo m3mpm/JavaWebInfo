@@ -30,6 +30,7 @@ public class TaskService {
         taskRepository.save(task);
     }
 
+    @Transactional
     public void deleteTask(Task task){
         taskRepository.delete(task);
     }

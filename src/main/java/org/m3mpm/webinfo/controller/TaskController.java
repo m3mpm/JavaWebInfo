@@ -3,7 +3,6 @@ package org.m3mpm.webinfo.controller;
 import jakarta.validation.Valid;
 import org.m3mpm.webinfo.dto.TaskDto;
 import org.m3mpm.webinfo.mapper.TaskMapper;
-import org.m3mpm.webinfo.mapper.TaskMapper2;
 import org.m3mpm.webinfo.model.Task;
 import org.m3mpm.webinfo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +21,10 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    private final TaskMapper2 taskMapper;
+    private final TaskMapper taskMapper;
 
     @Autowired
-    public TaskController(TaskService taskService, TaskMapper2 taskMapper) {
+    public TaskController(TaskService taskService, TaskMapper taskMapper) {
         this.taskService = taskService;
         this.taskMapper = taskMapper;
     }

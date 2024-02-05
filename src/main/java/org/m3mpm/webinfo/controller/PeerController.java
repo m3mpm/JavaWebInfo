@@ -3,7 +3,6 @@ package org.m3mpm.webinfo.controller;
 import jakarta.validation.Valid;
 import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.mapper.PeerMapper;
-import org.m3mpm.webinfo.mapper.PeerMapper2;
 import org.m3mpm.webinfo.model.Peer;
 import org.m3mpm.webinfo.service.PeerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/peers")
 public class PeerController {
     private final PeerService peerService;
-    private final PeerMapper2 peerMapper;
+    private final PeerMapper peerMapper;
 
     @Autowired
-    public PeerController(PeerService peerService, PeerMapper2 peerMapper) {
+    public PeerController(PeerService peerService, PeerMapper peerMapper) {
         this.peerService = peerService;
         this.peerMapper = peerMapper;
     }

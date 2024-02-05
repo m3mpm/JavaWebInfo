@@ -35,6 +35,7 @@ public class PeerService {
         peerRepository.save(peer);
     }
 
+    @Transactional
     public void deletePeer(Peer peer) {
         peerRepository.delete(peer);
     }
