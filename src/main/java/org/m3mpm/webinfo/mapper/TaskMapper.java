@@ -40,4 +40,12 @@ public abstract class TaskMapper {
             return  null;
         return taskService.getTask(title);
     }
+
+    String map(Task task){
+        return task.getTitle();
+    }
+
+    Task map(String title){
+        return taskService.getTask(title);
+    }
 }
