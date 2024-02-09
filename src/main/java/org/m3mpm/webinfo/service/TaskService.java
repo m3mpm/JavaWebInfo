@@ -26,6 +26,7 @@ public class TaskService {
         return taskRepository.getReferenceById(title);
     }
 
+    @Transactional
     public void saveTask(Task task){
         taskRepository.save(task);
     }
