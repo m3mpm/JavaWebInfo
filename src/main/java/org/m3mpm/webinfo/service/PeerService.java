@@ -4,12 +4,9 @@ package org.m3mpm.webinfo.service;
 import org.m3mpm.webinfo.model.Peer;
 import org.m3mpm.webinfo.repository.PeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -31,17 +28,14 @@ public class PeerService {
         return peerRepository.getReferenceById(nickname);
     }
 
+    @Transactional
     public void savePeer(Peer peer){
         peerRepository.save(peer);
     }
 
-//    @Transactional
-//    public void updatePeer(String newNickname, LocalDate newBirthday, String findNickname){
-//        peerRepository.updatePeer(newNickname,newBirthday,findNickname);
-//    }
-
-    public boolean isExistsById(String nickname){
-        return peerRepository.existsById(nickname);
+    @Transactional
+    public void deletePeer(Peer peer) {
+        peerRepository.delete(peer);
     }
 
     @Transactional
@@ -51,8 +45,13 @@ public class PeerService {
         }
     }
 
-    public void deletePeer(Peer peer) {
-        peerRepository.delete(peer);
+//    @Transactional
+//    public void updatePeer(String newNickname, LocalDate newBirthday, String findNickname){
+//        peerRepository.updatePeer(newNickname,newBirthday,findNickname);
+//    }
+
+    public boolean isExistsById(String nickname){
+        return peerRepository.existsById(nickname);
     }
     
 }

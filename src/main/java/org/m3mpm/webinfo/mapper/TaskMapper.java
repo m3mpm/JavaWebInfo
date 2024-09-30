@@ -1,26 +1,50 @@
 package org.m3mpm.webinfo.mapper;
 
+
 import org.m3mpm.webinfo.dto.TaskDto;
 import org.m3mpm.webinfo.model.Task;
-import org.modelmapper.ModelMapper;
+import org.m3mpm.webinfo.service.TaskService;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
-public class TaskMapper {
+@Mapper(componentModel = "spring")
+public abstract class TaskMapper {
 
-    private final ModelMapper modelMapper;
+   private TaskService taskService;
 
-    @Autowired
-    public TaskMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
+   @Autowired
+    public void setTaskService(TaskService taskService) {
+        this.taskService = taskService;
     }
 
-    public TaskDto converToTaskDto(Task task) {
-        return modelMapper.map(task,TaskDto.class);
+    @Mapping(target = "parentTask", qualifiedByName = "mapParentTaskToString")
+    public abstract TaskDto converToTaskDto(Task task);
+
+    @Mapping(target = "parentTask", qualifiedByName = "mapStringToParentTask")
+    public abstract Task converToTask(TaskDto taskDto);
+
+    @Named("mapParentTaskToString")
+    String mapParentTaskToString(Task parentTask){
+        if (parentTask == null) {
+            return null;
+        }
+        return parentTask.getTitle();
     }
 
-    public Task converToTask(TaskDto taskDto){
-        return modelMapper.map(taskDto,Task.class);
+    @Named("mapStringToParentTask")
+    Task mapStringToParentTask(String title){
+        if(title == null || title.isEmpty() || !taskService.isExistsById(title))
+            return  null;
+        return taskService.getTask(title);
+    }
+
+    String taskToString(Task task){
+        return task.getTitle();
+    }
+
+    Task stringToTask(String title){
+        return taskService.getTask(title);
     }
 }

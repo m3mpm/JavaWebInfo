@@ -2,7 +2,7 @@ package org.m3mpm.webinfo.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +15,7 @@ public class TaskDto {
 
     private String parentTask;
 
-    @NotEmpty(message = "Xp should be empty")
+    @NotNull(message = "Xp should be not empty")
     @Min(value = 0, message = "Xp should be greater than 0")
     private Integer maxXp;
 
