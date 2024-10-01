@@ -6,7 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add New Peer</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/css/style.css">
 </head>
 <body>
 
@@ -23,13 +24,14 @@
             </div>
 
             <div>
+<!--                <p class="peer-name"> Name: <span th:text="*{nickname}">Nickname</span></p>-->
                 <label for="nickname">Name</label>
                 <input type="text" th:field="*{nickname}" id="nickname" placeholder="Nickname" readonly>
                 <span class="validationError" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Name Error</span>
                 <br>
                 <label for="birthday">Birthday</label>
                 <input type="date" th:field="*{birthday}" id="birthday" placeholder="YYYY-MM-DD">
-                <span class="validationError" th:if="${#fields.hasErrors('birthday')}">Birthday is required</span>
+                <span class="validationError" th:if="${#fields.hasErrors('birthday')}">Birthday Error</span>
                 <br>
                 <input type="submit" value="Edit Peer">
             </div>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -24,8 +25,8 @@ public class PeerService {
     }
 
     public Peer getPeer(String nickname){
-//        return peerRepository.findAll().stream().filter(peer -> peer.getNickname().equals(nickname)).findAny().orElse(null);
-        return peerRepository.getReferenceById(nickname);
+        return peerRepository.findAll().stream().filter(peer -> peer.getNickname().equals(nickname)).findAny().orElse(null);
+//        return peerRepository.getReferenceById(nickname);
     }
 
     @Transactional
@@ -38,20 +39,31 @@ public class PeerService {
         peerRepository.delete(peer);
     }
 
-    @Transactional
-    public void updatePeer(String nickname, Peer updatedPeer){
-        if (peerRepository.existsById(nickname)){
-            peerRepository.save(updatedPeer);
-        }
-    }
-
+    /* ver. 1 */
 //    @Transactional
 //    public void updatePeer(String newNickname, LocalDate newBirthday, String findNickname){
 //        peerRepository.updatePeer(newNickname,newBirthday,findNickname);
 //    }
 
+    /* ver. 2 */
+    @Transactional
+    public void updatePeer(String nickname, LocalDate newBirthday){
+        if(peerRepository.existsById(nickname)){
+            peerRepository.updatePeer(nickname,newBirthday);
+        }
+    }
+
+    /* ver. 3 */
+//    @Transactional
+//    public void updatePeer(String nickname, Peer updatedPeer){
+//        if (peerRepository.existsById(nickname)){
+//            peerRepository.save(updatedPeer);
+//        }
+//    }
+
+    /* helper methods */
     public boolean isExistsById(String nickname){
         return peerRepository.existsById(nickname);
     }
-    
+
 }

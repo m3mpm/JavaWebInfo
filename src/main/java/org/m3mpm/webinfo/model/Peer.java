@@ -11,10 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Data
-@AllArgsConstructor
-//@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-@NoArgsConstructor(force = true)
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor(force = true)
 @Entity
 @Table(name = "peers")
 public class Peer {
@@ -52,4 +51,42 @@ public class Peer {
 
     @OneToMany(mappedBy = "peer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimeTracking> timeTrackingPeer = new ArrayList<>();
+
+    public Peer() {
+
+    }
+
+//    public Peer(String nickname, LocalDate birthday) {
+//        this.nickname = nickname;
+//        this.birthday = birthday;
+//    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Peer peer = (Peer) o;
+        return Objects.equals(nickname, peer.nickname) && Objects.equals(birthday, peer.birthday);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nickname, birthday);
+    }
 }

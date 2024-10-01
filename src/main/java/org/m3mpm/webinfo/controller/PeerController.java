@@ -39,7 +39,7 @@ public class PeerController {
         return "peer/showPeer";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/new")
     public String newPeer(@ModelAttribute("addPeerDto") PeerDto peerDto){
         return "/peer/addPeer";
     }
@@ -66,16 +66,7 @@ public class PeerController {
         return "/peer/editPeer";
     }
 
-    @PostMapping("/edit/{nickname}")
-    public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") @Valid PeerDto peerDto, Errors errors){
-        if (errors.hasErrors()){
-            return "/peer/editPeer";
-        }
-        Peer peer = peerMapper.convertToPeer(peerDto);
-        peerService.updatePeer(nickname,peer);
-        return "redirect:/peers";
-    }
-
+    /* ver. 1 */
 //    @PostMapping("/edit/{nickname}")
 //    public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") @Valid PeerDto peerDto, Errors errors){
 //        if (errors.hasErrors()){
@@ -85,6 +76,29 @@ public class PeerController {
 //        peerService.updatePeer(peer.getNickname(), peer.getBirthday(), nickname);
 //        return "redirect:/peers";
 //    }
+
+    /* ver. 2 */
+    @PostMapping("/edit/{nickname}")
+    public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") @Valid PeerDto peerDto, Errors errors){
+        if (errors.hasErrors()){
+            return "/peer/editPeer";
+        }
+        Peer peer = peerMapper.convertToPeer(peerDto);
+        peerService.updatePeer(peer.getNickname(),peer.getBirthday());
+        return "redirect:/peers";
+    }
+
+    /* ver. 3 */
+//    @PostMapping("/edit/{nickname}")
+//    public String editPeer(@PathVariable("nickname") String nickname, @ModelAttribute("editPeerDto") @Valid PeerDto peerDto, Errors errors){
+//        if (errors.hasErrors()){
+//            return "/peer/editPeer";
+//        }
+//        Peer updatedPeer = peerMapper.convertToPeer(peerDto);
+//        peerService.updatePeer(nickname,updatedPeer);
+//        return "redirect:/peers";
+//    }
+
 
 
 }

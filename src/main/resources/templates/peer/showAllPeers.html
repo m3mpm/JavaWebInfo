@@ -6,7 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Peers Table</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}" href="/css/normalize.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
 </head>
 <body>
 
@@ -15,7 +16,7 @@
         <h2>Peers Table</h2>
         <h3>List all Peers</h3>
         <div>
-            <a href="/peers/add">Add New Peer</a>
+            <a href="/peers/new">Add New Peer</a>
             <a href="/">Back to welcome page</a>
         </div>
         <table>
@@ -46,14 +47,12 @@
             </tbody>
         </table>
         <div>
-            <a href="/peers/add">Add New Peer</a>
+            <a href="/peers/new">Add New Peer</a>
             <a href="/">Back to welcome page</a>
         </div>
 
     </div>
 </div>
-
-
 
 </body>
 </html>

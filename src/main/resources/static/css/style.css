@@ -32,3 +32,8 @@ button a {
 span.validationError {
     color: red;
 }
+
+.peer-name{
+    margin: 0;
+    padding: 0;
+}
