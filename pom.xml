@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.m3mpm</groupId>
-	<artifactId>webinfo</artifactId>
+	<artifactId>WebInfo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>JavaWebInfo</name>
 	<description>Java Web Info project</description>
