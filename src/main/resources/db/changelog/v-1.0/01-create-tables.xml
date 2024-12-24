@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="v-1.0-create-table-peers" author="m3mpm">
+        <createTable tableName="peers">
+            <column name="nickname" type="varchar">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="birthday" type="date">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-tasks" author="m3mpm">
+        <createTable tableName="tasks">
+            <column name="title" type="varchar" defaultValue="NULL">
+                <constraints primaryKey="true" unique="true"/>
+            </column>
+            <column name="parent_task" type="varchar" defaultValue="NULL">
+                <constraints foreignKeyName="fk_tasks_parentTask" references="tasks(title)"
+                             nullable="true" deleteCascade="true"/>
+            </column>
+            <column name="max_xp" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-checks" author="m3mpm">
+        <createTable tableName="checks">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="peer" type="varchar">
+                <constraints foreignKeyName="fk_checks_peers" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="task" type="varchar">
+                <constraints foreignKeyName="fk_checks_tasks" references="tasks(title)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-p2p" author="m3mpm">
+        <createTable tableName="p2p">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="check_id" type="bigint">
+                <constraints foreignKeyName="fk_p2p_checks" references="checks(id)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="checking_peer" type="varchar">
+                <constraints foreignKeyName="fk_p2p_peers" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="state" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="time">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-verter" author="m3mpm">
+        <createTable tableName="verter">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="check_id" type="bigint">
+                <constraints foreignKeyName="fk_verter_checks" references="checks(id)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="state" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="time">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-transferred_points" author="m3mpm">
+        <createTable tableName="transferred_points">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="checking_peer" type="varchar">
+                <constraints foreignKeyName="fk_transferredPoints_checkingPeers" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="checked_peer" type="varchar">
+                <constraints foreignKeyName="fk_transferredPoints_checkedPeers" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="points_amount" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-friends" author="m3mpm">
+        <createTable tableName="friends">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="peer1" type="varchar">
+                <constraints foreignKeyName="fk_friends_peer1" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="peer2" type="varchar">
+                <constraints foreignKeyName="fk_friends_peer2" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-recommendations" author="m3mpm">
+        <createTable tableName="recommendations">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="peer" type="varchar">
+                <constraints foreignKeyName="fk_recommendations_peer" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="recommended_peer" type="varchar">
+                <constraints foreignKeyName="fk_recommendations_recommended_peer" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-xp" author="m3mpm">
+        <createTable tableName="xp">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="check_id" type="bigint">
+                <constraints foreignKeyName="fk_xp_checks" references="checks(id)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="xp_amount" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v-1.0-create-table-time_tracking" author="m3mpm">
+        <createTable tableName="time_tracking">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="peer" type="varchar">
+                <constraints foreignKeyName="fk_timeTracking_peers" references="peers(nickname)"
+                             nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="time">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
