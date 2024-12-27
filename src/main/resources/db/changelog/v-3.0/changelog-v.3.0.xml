@@ -5,8 +5,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <include file="v-1.0/changelog-v.1.0.xml" relativeToChangelogFile="true"/>
-    <include file="v-2.0/changelog-v.2.0.xml" relativeToChangelogFile="true"/>
-    <include file="v-3.0/changelog-v.3.0.xml" relativeToChangelogFile="true"/>
+    <include file="01-create-data-import-export-proc.xml" relativeToChangelogFile="true"/>
+    <include file="02-create-insert-proc-trg.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
