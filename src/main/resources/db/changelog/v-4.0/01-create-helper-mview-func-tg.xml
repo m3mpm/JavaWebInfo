@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+<!--    вспомогательная MATERIALIZED VIEW mv_checks, так как в разных tasks присутсвует-->
+<!--    одинаковый запрос к одним и тем же данным-->
+    <changeSet id="v-4.0-create-helper-checks-mview" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            DROP MATERIALIZED VIEW IF EXISTS mv_checks;
+            CREATE MATERIALIZED VIEW mv_checks AS
+            SELECT  ch.id,
+                    ch.date,
+                    ch.peer,
+                    ch.task,
+                    CASE WHEN v.state = 'Failure' OR p2p.state = 'Failure'
+                        THEN 'Failure'
+                        ELSE 'Success'
+                    END AS state
+            FROM checks ch
+                     JOIN p2p ON p2p.check_id = ch.id AND NOT p2p.state = 'Start'
+                     LEFT JOIN verter v ON v.check_id = ch.id AND NOT v.state = 'Start';
+        </sql>
+    </changeSet>
+
+<!--    функция обновления VIEW mv_checks-->
+    <changeSet id="v-4.0-create-refresh-mv_checks-func" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_refresh_mv_checks()
+            RETURNS TRIGGER LANGUAGE plpgsql AS $$
+            BEGIN
+                REFRESH MATERIALIZED VIEW mv_checks;
+            RETURN NULL;
+            END;$$;
+        </sql>
+    </changeSet>
+
+<!--    триггер обновления VIEW mv_checks, если обновятся данные в p2p table-->
+    <changeSet id="v-4.0-create-refresh-mv_checks-trg_insert_data_in_p2p" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE TRIGGER tg_refresh_mv_checks AFTER INSERT OR UPDATE OR DELETE
+            ON p2p
+            FOR EACH STATEMENT EXECUTE PROCEDURE fnc_refresh_mv_checks();
+        </sql>
+    </changeSet>
+
+<!--    триггер обновления VIEW mv_checks, если обновятся данные в verter table-->
+    <changeSet id="v-4.0-create-refresh-mv_checks-trg_insert_data_in_verter" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE TRIGGER tg_refresh_mv_checks AFTER INSERT OR UPDATE OR DELETE
+            ON verter
+            FOR EACH STATEMENT EXECUTE PROCEDURE fnc_refresh_mv_checks();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
