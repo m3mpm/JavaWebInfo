@@ -6,7 +6,7 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
 <!--    прцедура для импорта данных из файла в таблицу-->
-    <changeSet id="v-2.0-create-import-helper-function" author="m3mpm">
+    <changeSet id="v-3.0-create-import-helper-function" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
@@ -23,7 +23,7 @@
     </changeSet>
 
 
-    <changeSet id="v-2.0-create-import-procedure" author="m3mpm">
+    <changeSet id="v-3.0-create-import-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
@@ -46,7 +46,7 @@
     </changeSet>
 
 <!--    процедура для экспорта данных из таблицы в файл-->
-    <changeSet id="v-2.0-create-export-procedure" author="m3mpm">
+    <changeSet id="v-3.0-create-export-procedure" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">

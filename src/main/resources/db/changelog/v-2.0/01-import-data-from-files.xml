@@ -5,43 +5,43 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <changeSet id="v-3.0-import-data-peers" author="m3mpm">
+    <changeSet id="v-2.0-import-data-peers" author="m3mpm">
         <loadData tableName="peers" file="db/import/peers.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-tasks" author="m3mpm">
+    <changeSet id="v-2.0-import-data-tasks" author="m3mpm">
         <loadData tableName="tasks" file="db/import/tasks.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-checks" author="m3mpm">
+    <changeSet id="v-2.0-import-data-checks" author="m3mpm">
         <loadData tableName="checks" file="db/import/checks.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-p2p" author="m3mpm">
+    <changeSet id="v-2.0-import-data-p2p" author="m3mpm">
         <loadData tableName="p2p" file="db/import/p2p.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-verter" author="m3mpm">
+    <changeSet id="v-2.0-import-data-verter" author="m3mpm">
         <loadData tableName="verter" file="db/import/verter.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-transferred_points" author="m3mpm">
+    <changeSet id="v-2.0-import-data-transferred_points" author="m3mpm">
         <loadData tableName="transferred_points" file="db/import/transferredpoints.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-friends" author="m3mpm">
+    <changeSet id="v-2.0-import-data-friends" author="m3mpm">
         <loadData tableName="friends" file="db/import/friends.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-recommendations" author="m3mpm">
+    <changeSet id="v-2.0-import-data-recommendations" author="m3mpm">
         <loadData tableName="recommendations" file="db/import/recommendations.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-xp" author="m3mpm">
+    <changeSet id="v-2.0-import-data-xp" author="m3mpm">
         <loadData tableName="xp" file="db/import/xp.csv"/>
     </changeSet>
 
-    <changeSet id="v-3.0-import-data-time_tracking" author="m3mpm">
+    <changeSet id="v-2.0-import-data-time_tracking" author="m3mpm">
         <loadData tableName="time_tracking" file="db/import/timetracking.csv"/>
     </changeSet>
 
