@@ -421,4 +421,329 @@
         </sql>
     </changeSet>
 
+    <!--    15) Определить всех пиров, которые сдали заданные задания 1 и 2, но не сдали задание 3-->
+        <changeSet id="v-5.0-create-helper-fnc_PeerCompletedTasks-task15" author="m3mpm">
+            <sql endDelimiter="\nGO"
+                 splitStatements="true"
+                 stripComments="true">
+                CREATE OR REPLACE FUNCTION fnc_PeerCompletedTasks(fpeer text, ftask text)
+                RETURNS bool AS $$
+                    SELECT EXISTS (SELECT ch.peer
+                                   FROM mv_checks ch
+                                   WHERE ch.peer = fpeer AND ch.task = ftask AND ch.state = 'Success')
+                $$ LANGUAGE sql;
+            </sql>
+        </changeSet>
+
+    <changeSet id="v-5.0-create-pr_task15" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task15(INOUT ref refcursor, IN firstT text, IN secondT text, IN third text) AS $$
+            BEGIN
+            OPEN ref FOR
+            SELECT DISTINCT p.nickname
+            FROM peers p JOIN checks ch ON ch.peer = p.nickname
+            WHERE fnc_PeerCompletedTasks(p.nickname, firstT)
+              AND fnc_PeerCompletedTasks(p.nickname, secondT)
+              AND NOT fnc_PeerCompletedTasks(p.nickname, third);
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    16) Используя рекурсивное обобщенное табличное выражение, для каждой задачи вывести кол-во предшествующих ей задач-->
+        <changeSet id="v-5.0-create-helper-fnc-recursiveCountParent-task16" author="m3mpm">
+            <sql endDelimiter="\nGO"
+                 splitStatements="true"
+                 stripComments="true">
+                CREATE OR REPLACE FUNCTION recursiveCountParent(tasks_ text)
+                RETURNS integer AS $$
+                    WITH RECURSIVE test AS (
+                        SELECT title, parent_task, 0 AS level
+                        FROM tasks
+                        WHERE title = tasks_
+                        UNION ALL
+                        SELECT t.title, t.parent_task, test.level + 1
+                        FROM tasks t
+                        JOIN test ON t.title = test.parent_task
+                    )
+                    SELECT max(level) FROM test
+               $$ LANGUAGE sql;
+            </sql>
+        </changeSet>
+
+    <changeSet id="v-5.0-create-pr_task16" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task16(INOUT ref refcursor) AS $$
+            BEGIN
+            OPEN ref FOR
+            SELECT t.title, recursiveCountParent(t.title) FROM tasks t;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    17) Найти "удачные" для проверок дни. День считается "удачным", если в нем есть хотя бы N идущих подряд успешных проверки-->
+    <changeSet id="v-5.0-create-pr_task17" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task17(INOUT ref refcursor, IN N integer) AS $$
+            BEGIN
+            OPEN ref FOR
+                WITH AllGroup AS
+                (
+                    SELECT  "id",
+                            "task",
+                            "state",
+                            "date",
+                            SUM(CASE WHEN "state" = prev THEN 0 ELSE 1 END) OVER(ORDER BY "id") AS grp
+                    FROM (SELECT *, LAG("state") OVER(ORDER BY "id") AS prev
+                            FROM mv_checks) AS res
+                )
+            SELECT "date"::date
+            FROM ( SELECT "date", count(*) AS CountChecks
+                   FROM AllGroup ag JOIN xp ON xp.check_id = ag.id
+                                    JOIN tasks t ON t.title = ag."task"
+                   WHERE ag."state" = 'Success' AND xp.xp_amount > t.max_xp * 0.8
+                   GROUP BY grp, "date"
+                 ) AS res
+            GROUP BY "date"
+            HAVING max(CountChecks) >= N;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    18) Определить пира с наибольшим числом выполненных заданий-->
+    <changeSet id="v-5.0-create-pr_task18" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task18(INOUT ref refcursor) AS $$
+            BEGIN
+            OPEN ref FOR
+                WITH CompletedTask AS (
+                    SELECT peer, count(*) AS count_ FROM mv_checks ch
+                    WHERE ch.state = 'Success'
+                    GROUP BY peer
+                )
+            SELECT ct.peer AS "Peer", count_ AS "Tasks" FROM CompletedTask ct
+            WHERE ct.count_ = (SELECT max(count_) FROM CompletedTask);
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    19) Определить пира с наибольшим количеством XP-->
+    <changeSet id="v-5.0-create-pr_task19" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task19 (INOUT ref refcursor)
+            AS $$
+            BEGIN
+            OPEN ref FOR
+            SELECT p.nickname AS Peer, sum(xp_amount) AS XP
+            FROM checks ch
+                     INNER JOIN xp ON ch.id = xp.check_id
+                     INNER JOIN peers p ON p.nickname = ch.peer
+            GROUP BY p.nickname
+            HAVING sum(xp_amount) = (SELECT sum(xp_amount)
+                                     FROM checks ch
+                                              INNER JOIN xp ON ch.id = xp.check_id
+                                              INNER JOIN peers p ON p.nickname = ch.peer
+                                     GROUP BY p.nickname
+                                     ORDER BY 1 DESC LIMIT 1);
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    20) Определить пира, который провел сегодня в кампусе больше всего времени-->
+    <changeSet id="v-5.0-create-pr_task20" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task20 (INOUT ref refcursor)
+            AS $$
+            BEGIN
+            OPEN ref FOR
+                WITH intime AS(
+                    SELECT id, peer, "time"
+                    FROM time_tracking
+                    WHERE state = 1 AND "date" = now()::date),
+                outtime AS(
+                    SELECT id, peer, "time"
+                    FROM time_tracking
+                    WHERE state = 2 AND "date" = now()::date),
+                JOINtable AS (
+                    SELECT DISTINCT ON (i.id) i.id AS id1, i.peer AS peer1, i."time" AS time1, o.id AS id2, o.peer AS peer2, o."time" AS time2
+                    FROM intime i INNER JOIN outtime o ON i.peer = o.peer AND i."time" &lt; o."time"
+                    ORDER BY 1,2,3,6),
+                peerandmaxtime AS (
+                    SELECT peer1 AS peer
+                    FROM JOINtable
+                    GROUP BY peer1
+                    HAVING (sum(time2 - time1)::time) = (SELECT (sum(time2 - time1)::time) AS time3
+                                                        FROM JOINtable
+                                                        GROUP BY peer1
+                                                        ORDER BY 1 DESC LIMIT 1)
+                )
+            SELECT * FROM peerandmaxtime;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    21) Определить пиров, приходивших раньше заданного времени не менее N раз за всё время-->
+    <changeSet id="v-5.0-create-pr_task21" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task21(INOUT ref refcursor, time_ time, mincount integer) AS $$
+            BEGIN
+            OPEN ref FOR
+            SELECT peer
+            FROM(SELECT peer, "date", min("time")
+                 FROM time_tracking
+                 WHERE "state" = 1 AND "time" &lt; time_
+                 GROUP BY 1, 2
+                 ORDER BY 2) AS res
+            GROUP BY peer
+            HAVING count(*) >= mincount;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    22) Определить пиров, выходивших за последние N дней из кампуса больше M раз-->
+    <changeSet id="v-5.0-create-pr_task22" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task22(INOUT ref refcursor, Ndays integer, mincount integer) AS $$
+            BEGIN
+            OPEN ref FOR
+            SELECT peer
+            FROM (SELECT peer, "date", count(*) - 1 AS count_
+                  FROM time_tracking
+                  WHERE "state" = 1 AND "date" > (now()::date - Ndays)
+                  GROUP BY 1, 2
+                  ORDER BY 2) AS res
+            GROUP BY peer
+            HAVING sum(count_) > mincount;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    23) Определить пира, который пришел сегодня последним-->
+    <changeSet id="v-5.0-create-pr_task23" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task23(INOUT ref refcursor) AS $$
+            BEGIN
+            OPEN ref FOR
+            SELECT peer
+            FROM (SELECT peer, "date", min("time")
+                  FROM time_tracking
+                  WHERE "state" = 1 AND "date" = now()::date
+                  GROUP BY 1, 2
+                  ORDER BY 3 DESC
+                      LIMIT 1) AS res;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    24) Определить пиров, которые выходили вчера из кампуса больше чем на N минут-->
+    <changeSet id="v-5.0-create-pr_task24" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task24(INOUT ref refcursor, N integer) AS $$
+            BEGIN
+            OPEN ref FOR
+                WITH in_ AS (
+                    SELECT id, peer, "date", "time"
+                    FROM time_tracking tt
+                    WHERE tt.state = 1 AND "date" = current_date - 1
+                    AND NOT tt.time = ( SELECT min("time")
+                                        FROM time_tracking tt2
+                                        WHERE tt2.date = tt.date AND tt2.peer = tt.peer)
+                    ORDER BY 2, 4
+                ), out_ AS(
+                    SELECT id, peer, "date", "time"
+                    FROM time_tracking tt
+                    WHERE tt.state = 2 AND "date" = current_date - 1
+                    AND NOT tt.time = ( SELECT max("time")
+                                        FROM time_tracking tt2
+                                        WHERE tt2.date = tt.date AND tt2.peer = tt.peer)
+                    ORDER BY 2, 4
+                ), InAndOut AS(
+                    SELECT DISTINCT ON (in_.id) in_.id, in_.peer, out_.time AS out_, in_.time AS in_
+                    FROM in_
+                    JOIN out_ ON in_.peer = out_.peer AND in_.date = out_.date
+                    WHERE out_.time &lt; in_.time
+                )
+            SELECT peer FROM InAndOut
+            GROUP BY peer
+            HAVING sum(InAndOut.in_ - InAndOut.out_) > make_time(N / 60, N - N / 60 * 60, 0.);
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    25) Определить для каждого месяца процент ранних входов-->
+        <changeSet id="v-5.0-create-helper-fnc-countVisit-task25" author="m3mpm">
+            <sql endDelimiter="\nGO"
+                 splitStatements="true"
+                 stripComments="true">
+                CREATE OR REPLACE FUNCTION countVisit(peer_ text, mintime time DEFAULT '24:00:00')
+                RETURNS integer AS $$
+                    SELECT count(*) FROM ( SELECT tt.peer, tt.date
+                                           FROM time_tracking tt
+                                           WHERE tt.peer = peer_
+                                           GROUP BY 1, 2
+                                           HAVING min("time") &lt; mintime) AS res
+            $$ LANGUAGE sql;
+            </sql>
+        </changeSet>
+
+
+    <changeSet id="v-5.0-create-pr_task25" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE PROCEDURE pr_task25(INOUT ref refcursor) AS $$
+            BEGIN
+            OPEN ref FOR
+                WITH Months AS (
+                    SELECT gs::date AS "Month"
+                    FROM generate_series('2000-01-31', '2000-12-31', interval '1 month') AS gs
+                ),
+                VisitsInMonthOfBirth AS (
+                    SELECT  TO_CHAR("Month"::date, 'Month') AS "Month",
+                            SUM(countVisit(p.nickname::text)) AS "AllVisits",
+                            SUM(countVisit(p.nickname::text, '12:00:00')) AS "EarlyVisits"
+                    FROM Months
+                    LEFT JOIN peers p ON EXTRACT(MONTH FROM "Month") = EXTRACT(MONTH FROM p.birthday::date)
+                    GROUP BY "Month"
+                )
+            SELECT "Month", CASE WHEN "AllVisits" = 0
+                                     THEN 0
+                                 ELSE ("EarlyVisits" * 100 / "AllVisits")
+                END AS "EarlyEntries"
+            FROM VisitsInMonthOfBirth
+            ORDER BY to_date("Month", 'Mon');
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
