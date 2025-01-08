@@ -5,6 +5,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <include file="01-create-main-procedures.xml" relativeToChangelogFile="true"/>
+<!--    <include file="01-create-main-procedures.xml" relativeToChangelogFile="true"/>-->
+    <include file="02-create-main-functions.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
