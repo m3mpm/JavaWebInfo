@@ -304,4 +304,115 @@
         </sql>
     </changeSet>
 
+    <!--    11) Определить процент пиров, которые:Приступили к блоку 1,Приступили к блоку 2, Приступили к обоим, Не приступили ни к одному-->
+    <changeSet id="v-5.0-create-helper-fnc-PeersStartedBlock-task11" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION PeersStartedBlock("block" varchar)
+                RETURNS TABLE("Peer" varchar)
+            AS $$
+            SELECT DISTINCT ch.peer
+            FROM checks ch
+            WHERE ch.task LIKE "block" || '%'
+                $$ LANGUAGE sql;
+        </sql>
+    </changeSet>
+
+    <changeSet id="v-5.0-create-fnc_task11" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_task11(IN block1 VARCHAR, IN block2 VARCHAR)
+                RETURNS TABLE(StartedBlock1 integer, StartedBlock2 integer, StartedBothBlocks integer, DidntStartAnyBlock integer)
+            AS $$
+                DECLARE
+            StartedBlock1 INTEGER := (SELECT count(*) FROM PeersStartedBlock("block1"));
+                    StartedBlock2 INTEGER := (SELECT count(*) FROM PeersStartedBlock("block2"));
+                    StartedBothBlocks INTEGER := (SELECT count(*) FROM (
+                                                                       SELECT "Peer"  FROM PeersStartedBlock("block1")
+                                                                       INTERSECT
+                                                                       SELECT "Peer"  FROM PeersStartedBlock("block2")
+                                                                   ) AS res);
+                    DidntStartAnyBlock INTEGER := (SELECT count(*) FROM (
+                                                                        SELECT nickname FROM peers
+                                                                        EXCEPT
+                                                                        (SELECT "Peer" FROM PeersStartedBlock("block1")
+                                                                         UNION
+                                                                         SELECT "Peer" FROM PeersStartedBlock("block2"))
+                                                                    ) AS res1);
+                    AllPeers INTEGER := (SELECT count(*) FROM peers);
+            BEGIN
+            RETURN QUERY
+            SELECT StartedBlock1 * 100 / AllPeers AS StartedBlock1,
+                   StartedBlock2 * 100 / AllPeers AS StartedBlock2,
+                   StartedBothBlocks * 100 / AllPeers AS StartedBothBlocks,
+                   DidntStartAnyBlock * 100 / AllPeers AS DidntStartAnyBlock;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    12) Определить N пиров с наибольшим числом друзей-->
+    <changeSet id="v-5.0-create-fnc_task12" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_task12(IN fLIMIT integer)
+                RETURNS TABLE(peer varchar)
+            AS $$
+            BEGIN
+            RETURN QUERY
+            SELECT peer1 AS "Peer", count(*) AS FriendsCount
+            FROM (SELECT peer1 FROM friends
+                  UNION ALL
+                  SELECT peer2 FROM friends) AS res
+            GROUP BY peer1
+            ORDER BY "FriendsCount" DESC
+                LIMIT fLIMIT;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
+    <!--    13) Определить процент пиров, которые когда-либо успешно проходили проверку в свой день рождения-->
+    <changeSet id="v-5.0-create-helper-fnc_ChecksCountOnBirthday-task13" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_ChecksCountOnBirthday(fstate varchar)
+                RETURNS integer
+            AS $$
+            SELECT count(*) AS count_
+            FROM mv_checks ch JOIN peers p ON p.nickname = ch.peer
+            WHERE substring(ch.date::text, 5) = substring(p.birthday::text, 5) AND ch.state = fstate
+                $$ LANGUAGE sql;
+        </sql>
+    </changeSet>
+
+    <changeSet id="v-5.0-create-fnc_task13" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_task13()
+                RETURNS TABLE(SuccessfulChecks numeric, UnsuccessfulChecks numeric)
+            AS $$
+                DECLARE
+            s integer := (SELECT * FROM fnc_ChecksCountOnBirthday('Success'));
+                    f integer := (SELECT * FROM fnc_ChecksCountOnBirthday('Failure'));
+            BEGIN
+            RETURN QUERY
+            SELECT CASE
+                       WHEN (s + f) != 0 THEN round(s * 100 / (s + f)::numeric)
+                       ELSE 0
+                       END AS "SuccessfulChecks",
+                   CASE
+                       WHEN (s + f) != 0 THEN round(f * 100 / (s + f)::numeric)
+                       ELSE 0
+                       END AS "UnsuccessfulChecks";
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
