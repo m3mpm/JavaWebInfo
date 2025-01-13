@@ -415,4 +415,95 @@
         </sql>
     </changeSet>
 
+    <!--    14) Определить кол-во XP, полученное в сумме каждым пиром-->
+    <changeSet id="v-5.0-create-fnc_task14" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_task14 ()
+                RETURNS TABLE(peer varchar, xp bigint)
+            AS $$
+            BEGIN
+            RETURN QUERY
+            SELECT tmp.peer, sum(maxpoint) AS xp
+            FROM (SELECT p.nickname AS peer, t.title AS project, max(xp.xp_amount) AS maxpoint
+                  FROM xp INNER JOIN checks ch ON ch.id = xp.check_id
+                          INNER JOIN peers p ON p.nickname = ch.peer
+                          INNER JOIN tasks t ON ch.task = t.title
+                  GROUP BY 1,2
+                  ORDER BY 1,2) tmp
+            GROUP BY tmp.peer
+            ORDER BY 2 DESC;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+    <!--    15) Определить всех пиров, которые сдали заданные задания 1 и 2, но не сдали задание 3-->
+    <changeSet id="v-5.0-create-helper-fnc_PeerCompletedTasks-task15" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_PeerCompletedTasks(fpeer text, ftask text)
+            RETURNS bool
+            AS $$
+            SELECT EXISTS (SELECT ch.peer
+                           FROM mv_checks ch
+                           WHERE ch.peer = fpeer AND ch.task = ftask AND ch.state = 'Success')
+                       $$ LANGUAGE sql;
+        </sql>
+    </changeSet>
+    <changeSet id="v-5.0-create-fnc_task15" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_task15(IN firstT text, IN secondT text, IN third text)
+               RETURNS TABLE(peer varchar)
+            AS $$
+            BEGIN
+            RETURN QUERY
+            SELECT DISTINCT p.nickname
+            FROM peers p JOIN checks ch ON ch.peer = p.nickname
+            WHERE fnc_PeerCompletedTasks(p.nickname, firstT)
+              AND fnc_PeerCompletedTasks(p.nickname, secondT)
+              AND NOT fnc_PeerCompletedTasks(p.nickname, third);
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+    <!--    16) Используя рекурсивное обобщенное табличное выражение, для каждой задачи вывести кол-во предшествующих ей задач-->
+    <changeSet id="v-5.0-create-helper-fnc-recursiveCountParent-task16" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION recursiveCountParent(tasks_ text)
+                RETURNS integer
+            AS $$
+                WITH RECURSIVE test AS (
+                    SELECT title, parent_task, 0 AS level
+                    FROM tasks
+                    WHERE title = tasks_
+                    UNION ALL
+                    SELECT t.title, t.parent_task, test.level + 1
+                    FROM tasks t
+                    JOIN test ON t.title = test.parent_task
+                )
+            SELECT max(test.level) FROM test
+                                            $$ LANGUAGE sql;
+        </sql>
+    </changeSet>
+    <changeSet id="v-5.0-create-fnc_task16" author="m3mpm">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+            CREATE OR REPLACE FUNCTION fnc_task16()
+                RETURNS TABLE(title varchar, number_of_tasks integer )
+            AS $$
+            BEGIN
+            RETURN QUERY
+            SELECT t.title, recursiveCountParent(t.title) FROM tasks t;
+            END;
+            $$ LANGUAGE plpgsql;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
