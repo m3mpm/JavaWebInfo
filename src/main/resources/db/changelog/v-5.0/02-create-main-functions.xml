@@ -6,62 +6,62 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <!--    1) Написать функцию, возвращающую таблицу TransferredPoints в более человекочитаемом виде-->
-    <changeSet id="v-5.0-create-fnc_task1" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION fnc_task1()
-            RETURNS TABLE ("Peer1" varchar, "Peer2" varchar, "PointsAmount" integer)
-            AS $$
-                WITH tmp AS (
-                    SELECT tp.checking_peer, tp.checked_peer, tp.points_amount FROM transferred_points tp
-                    JOIN transferred_points t2 ON t2.checking_peer = tp.checked_peer
-                    AND t2.checked_peer = tp.checking_peer AND tp.id &lt; t2.id
-                )
-                (SELECT checking_peer, checked_peer, sum(res.points_amount)
-                FROM (SELECT f.checking_peer, f.checked_peer, f.points_amount FROM transferred_points f
-                    UNION
-                    SELECT t.checked_peer, t.checking_peer, -t.points_amount FROM tmp t) AS res
-                GROUP BY 1, 2)
-                EXCEPT
-            SELECT t.checking_peer, t.checked_peer, t.points_amount FROM tmp t
-            ORDER BY 1;
-            $$ LANGUAGE sql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-fnc_task1" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION fnc_task1()-->
+<!--            RETURNS TABLE ("Peer1" varchar, "Peer2" varchar, "PointsAmount" integer)-->
+<!--            AS $$-->
+<!--                WITH tmp AS (-->
+<!--                    SELECT tp.checking_peer, tp.checked_peer, tp.points_amount FROM transferred_points tp-->
+<!--                    JOIN transferred_points t2 ON t2.checking_peer = tp.checked_peer-->
+<!--                    AND t2.checked_peer = tp.checking_peer AND tp.id &lt; t2.id-->
+<!--                )-->
+<!--                (SELECT checking_peer, checked_peer, sum(res.points_amount)-->
+<!--                FROM (SELECT f.checking_peer, f.checked_peer, f.points_amount FROM transferred_points f-->
+<!--                    UNION-->
+<!--                    SELECT t.checked_peer, t.checking_peer, -t.points_amount FROM tmp t) AS res-->
+<!--                GROUP BY 1, 2)-->
+<!--                EXCEPT-->
+<!--                SELECT t.checking_peer, t.checked_peer, t.points_amount FROM tmp t-->
+<!--                ORDER BY 1;-->
+<!--            $$ LANGUAGE sql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 
     <!--    2) Написать функцию, которая возвращает таблицу вида: ник пользователя, название проверенного задания, кол-во полученного XP-->
-    <changeSet id="v-5.0-create-fnc_task2" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION fnc_task2()
-            RETURNS TABLE ("Peer" varchar, "Task" varchar, "XP" integer) AS $$
-            SELECT ch.peer, ch.task, xp.xp_amount
-            FROM mv_checks ch
-                     JOIN xp ON xp.check_id = ch.id
-            WHERE ch.state = 'Success'
-            ORDER BY 1, 3 DESC;
-            $$ LANGUAGE sql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-fnc_task2" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION fnc_task2()-->
+<!--            RETURNS TABLE ("Peer" varchar, "Task" varchar, "XP" integer) AS $$-->
+<!--            SELECT ch.peer, ch.task, xp.xp_amount-->
+<!--            FROM mv_checks ch-->
+<!--                     JOIN xp ON xp.check_id = ch.id-->
+<!--            WHERE ch.state = 'Success'-->
+<!--            ORDER BY 1, 3 DESC;-->
+<!--            $$ LANGUAGE sql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 
     <!--    3) Написать функцию, определяющую пиров, которые не выходили из кампуса в течение всего дня-->
-    <changeSet id="v-5.0-create-fnc_task3" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION fnc_task3(IN pdate date)
-            RETURNS TABLE (peer VARCHAR) AS $$
-            SELECT peer FROM time_tracking
-            WHERE date = pdate AND state = '1'
-            GROUP BY peer
-            HAVING count(state) = 1;
-            $$ LANGUAGE sql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-fnc_task3" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION fnc_task3(IN pdate date)-->
+<!--            RETURNS TABLE (peer VARCHAR) AS $$-->
+<!--            SELECT peer FROM time_tracking-->
+<!--            WHERE date = pdate AND state = 1-->
+<!--            GROUP BY peer-->
+<!--            HAVING count(state) = 1;-->
+<!--            $$ LANGUAGE sql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 
-    <!--    4) Найти процент успешных и неуспешных проверок за всё время-->
+<!--    4) Найти процент успешных и неуспешных проверок за всё время-->
     <changeSet id="v-5.0-create-fnc_task4" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
@@ -70,51 +70,51 @@
                 RETURNS TABLE ("SuccessfulChecks" numeric, "UnsuccessfulChecks" numeric)
             AS $$
                 DECLARE
-            Success integer := (SELECT count(*) FROM mv_checks ch WHERE ch.state = 'Success');
+                    Success integer := (SELECT count(*) FROM mv_checks ch WHERE ch.state = 'Success');
                     Failure integer := (SELECT count(*) FROM mv_checks ch WHERE ch.state = 'Failure');
-            BEGIN
-            RETURN QUERY SELECT
+                BEGIN
+                    RETURN QUERY SELECT
                                      CASE
                                          WHEN (Success + Failure) != 0 THEN
                                              round(Success * 100 / (Success + Failure)::numeric)
                                          ELSE 0
-            END AS "SuccessfulChecks",
+                                         END AS "SuccessfulChecks",
                                      CASE
                                          WHEN (Success + Failure) != 0 THEN
                                              round(Failure * 100 / (Success + Failure)::numeric)
                                          ELSE 0
-            END AS "UnsuccessfulChecks";
-            END;
+                                         END AS "UnsuccessfulChecks";
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
 
-    <!--    5) Посчитать изменение в количестве пир поинтов каждого пира по таблице TransferredPoints-->
-    <changeSet id="v-5.0-create-helper-fnc_get_peer_points_change-task5" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION fnc_get_peer_points_change(IN peername text)
-                RETURNS integer
-            AS $$
-            BEGIN
-                    -- кол-во заработанных поинтов если пир есть в столбце checking_peer
-            RETURN (SELECT COALESCE((SELECT(sum(points_amount)) -- COALESCE если не нашлось такого пира, и после sum получился результат NULL
-                                     FROM transferred_points
-                                     WHERE checking_peer=peername
-                                     GROUP BY checking_peer), 0)
-                               +
-                               -- и кол-во потраченных поинтов если пир есть в столбце checked_peer
-                           (SELECT COALESCE((SELECT(sum(points_amount)*-1) -- меняем знак
-                                             FROM transferred_points
-                                             WHERE checked_peer=peername
-                                             GROUP BY checked_peer), 0))
-            );-- в результате получается сумма, если отрицательная то пир проверялся больше чем проверял
-            END;
-            $$LANGUAGE plpgsql;
-        </sql>
-    </changeSet>
-
+<!--    5) Посчитать изменение в количестве пир поинтов каждого пира по таблице TransferredPoints-->
+<!--    <changeSet id="v-5.0-create-helper-fnc_get_peer_points_change-task5" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION fnc_get_peer_points_change(IN peername text)-->
+<!--                RETURNS integer-->
+<!--            AS $$-->
+<!--                BEGIN-->
+<!--                    &#45;&#45; кол-во заработанных поинтов если пир есть в столбце checking_peer-->
+<!--                    RETURN (SELECT COALESCE((SELECT(sum(points_amount)) &#45;&#45; COALESCE если не нашлось такого пира, и после sum получился результат NULL-->
+<!--                                             FROM transferred_points-->
+<!--                                             WHERE checking_peer=peername-->
+<!--                                             GROUP BY checking_peer), 0)-->
+<!--                                       +-->
+<!--                                       &#45;&#45; и кол-во потраченных поинтов если пир есть в столбце checked_peer-->
+<!--                                   (SELECT COALESCE((SELECT(sum(points_amount)*-1) &#45;&#45; меняем знак-->
+<!--                                                     FROM transferred_points-->
+<!--                                                     WHERE checked_peer=peername-->
+<!--                                                     GROUP BY checked_peer), 0))-->
+<!--                    );&#45;&#45; в результате получается сумма, если отрицательная то пир проверялся больше чем проверял-->
+<!--                END;-->
+<!--            $$LANGUAGE plpgsql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+    
     <changeSet id="v-5.0-create-fnc_task5" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
@@ -122,16 +122,16 @@
             CREATE OR REPLACE FUNCTION fnc_task5()
                 RETURNS TABLE(Peer varchar, PointsChange integer)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT name AS Peer, fnc_get_peer_points_change(name) AS PointsChange
-            FROM (SELECT checking_peer AS name
-                  FROM transferred_points
-                  UNION DISTINCT
-                  SELECT checked_peer AS name
-                  FROM transferred_points ) AS names
-            ORDER BY Peer;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT name AS Peer, fnc_get_peer_points_change(name) AS PointsChange
+                        FROM (SELECT checking_peer AS name
+                              FROM transferred_points
+                              UNION DISTINCT
+                              SELECT checked_peer AS name
+                              FROM transferred_points ) AS names
+                        ORDER BY Peer;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
@@ -144,46 +144,46 @@
             CREATE OR REPLACE FUNCTION fnc_task6()
                 RETURNS TABLE(Peer varchar, PointsChange integer)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT name AS Peer, fnc_get_peer_points_change(name) AS PointsChange
-            FROM (SELECT "Peer1" AS name
-                  FROM fnc_task1()
-                  UNION DISTINCT
-                  SELECT "Peer2" AS name
-                  FROM fnc_task1()
-                 ) AS names
-            ORDER BY PointsChange DESC;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT name AS Peer, fnc_get_peer_points_change(name) AS PointsChange
+                        FROM (SELECT "Peer1" AS name
+                              FROM fnc_task1()
+                              UNION DISTINCT
+                              SELECT "Peer2" AS name
+                              FROM fnc_task1()
+                             ) AS names
+                        ORDER BY PointsChange DESC;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
 
     <!--    7) Определить самое часто проверяемое задание за каждый день-->
-    <changeSet id="v-5.0-create-helper-fnc_get_max_count_task-task7" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION fnc_get_max_count_task(IN date_ date)
-                RETURNS integer
-            AS $$
-            BEGIN
-            RETURN (
-                WITH checksinday AS
-                         (
-                             SELECT c.date, c.task, count(*) AS count_
-                             FROM checks c
-                             GROUP BY 1, 2
-                             ORDER BY 1
-                         )
-                SELECT max(cd.count_)
-                FROM checksinday cd
-                WHERE cd.date=date_
-            );
-            END;
-            $$ LANGUAGE plpgsql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-helper-fnc_get_max_count_task-task7" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION fnc_get_max_count_task(IN date_ date)-->
+<!--                RETURNS integer-->
+<!--            AS $$-->
+<!--                BEGIN-->
+<!--                    RETURN (-->
+<!--                        WITH checksinday AS-->
+<!--                                 (-->
+<!--                                     SELECT c.date, c.task, count(*) AS count_-->
+<!--                                     FROM checks c-->
+<!--                                     GROUP BY 1, 2-->
+<!--                                     ORDER BY 1-->
+<!--                                 )-->
+<!--                        SELECT max(cd.count_)-->
+<!--                        FROM checksinday cd-->
+<!--                        WHERE cd.date=date_-->
+<!--                    );-->
+<!--                END;-->
+<!--            $$ LANGUAGE plpgsql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 
     <changeSet id="v-5.0-create-fnc_task7" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -192,16 +192,16 @@
             CREATE OR REPLACE FUNCTION fnc_task7()
                 RETURNS TABLE("day" text, task varchar)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT to_char(date, 'DD.MM.YYYY') AS day, t.task
-            FROM(SELECT c.date, c.task, count(*) AS count_
-                FROM checks c
-                GROUP BY 1, 2
-                ORDER BY 1) AS t
-            WHERE count_=fnc_get_max_count_task(date)
-            ORDER BY 1, 2;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT to_char(date, 'DD.MM.YYYY') AS day, t.task
+                        FROM(SELECT c.date, c.task, count(*) AS count_
+                            FROM checks c
+                            GROUP BY 1, 2
+                            ORDER BY 1) AS t
+                        WHERE count_=fnc_get_max_count_task(date)
+                        ORDER BY 1, 2;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
@@ -216,7 +216,7 @@
             AS $$
                 DECLARE
                     -- найти check последней проверки где есть старт и завершение
-            check_ integer := ( SELECT p1.check_id
+                    check_ integer := ( SELECT p1.check_id
                                         FROM p2p p1
                                         JOIN p2p p2 ON p2.check_id = p1.check_id AND p2.state='Start'
                                         WHERE p1.state!='Start'
@@ -230,10 +230,10 @@
                                         WHERE check_id=check_ AND state='Start'
                                         ORDER BY time DESC
                                         LIMIT 1);
-            BEGIN
-            RETURN
-                    (SELECT endtime-starttime AS last_check_duration);
-            END;
+                BEGIN
+                    RETURN
+                        (SELECT endtime-starttime AS last_check_duration);
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
@@ -246,9 +246,9 @@
             CREATE OR REPLACE FUNCTION fnc_task9(IN blockname VARCHAR)
             RETURNS TABLE(peer varchar, "day" date)
             AS $$
-            BEGIN
-            RETURN QUERY
-                WITH cte AS (
+                BEGIN
+                    RETURN QUERY
+                        WITH cte AS (
                             SELECT c.peer AS peer, task, c.date AS day, row_number() OVER (PARTITION BY c.peer) AS completed_task_counter
                             FROM p2p p1
                                      JOIN checks c ON c.id = p1.check_id
@@ -261,13 +261,13 @@
                                                   WHERE p2.state = 'Start' and p2.check_id = p1.check_id)
                             GROUP BY c.peer, task, date
                         )
-            SELECT cte.peer, cte.day
-            FROM cte
-            WHERE completed_task_counter = (SELECT count(*)
-                                            FROM tasks
-                                            WHERE tasks.title LIKE (blockname||'%'))
-            ORDER BY day DESC;
-            END;
+                        SELECT cte.peer, cte.day
+                        FROM cte
+                        WHERE completed_task_counter = (SELECT count(*)
+                                                        FROM tasks
+                                                        WHERE tasks.title LIKE (blockname||'%'))
+                        ORDER BY day DESC;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
@@ -280,9 +280,9 @@
             CREATE OR REPLACE FUNCTION fnc_task10 ()
                 RETURNS TABLE(peer varchar, recommended_peer varchar)
             AS $$
-            BEGIN
-            RETURN QUERY
-                WITH w_tmp1 AS (SELECT p.nickname AS peer, f.peer2 AS friend, r.recommended_peer AS recommended_peer
+                BEGIN
+                    RETURN QUERY
+                        WITH w_tmp1 AS (SELECT p.nickname AS peer, f.peer2 AS friend, r.recommended_peer AS recommended_peer
                                     FROM peers p
                                     INNER JOIN friends f ON p.nickname = f.peer1
                                     INNER JOIN recommendations r ON f.peer2 = r.peer AND p.nickname != r.recommended_peer
@@ -296,28 +296,28 @@
                                           w_tmp2.count_of_recommends,
                                           ROW_NUMBER() OVER (PARTITION BY w_tmp2.peer ORDER BY w_tmp2.count_of_recommends DESC) AS num_of_row_for_each_peer
                                     FROM w_tmp2)
-            SELECT w_tmp3.peer, w_tmp3.recommended_peer
-            FROM w_tmp3
-            WHERE w_tmp3.num_of_row_for_each_peer = 1;
-            END;
+                        SELECT w_tmp3.peer, w_tmp3.recommended_peer
+                        FROM w_tmp3
+                        WHERE w_tmp3.num_of_row_for_each_peer = 1;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
 
     <!--    11) Определить процент пиров, которые:Приступили к блоку 1,Приступили к блоку 2, Приступили к обоим, Не приступили ни к одному-->
-    <changeSet id="v-5.0-create-helper-fnc-PeersStartedBlock-task11" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION PeersStartedBlock("block" varchar)
-                RETURNS TABLE("Peer" varchar)
-            AS $$
-            SELECT DISTINCT ch.peer
-            FROM checks ch
-            WHERE ch.task LIKE "block" || '%'
-                $$ LANGUAGE sql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-helper-fnc-PeersStartedBlock-task11" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION PeersStartedBlock("block" varchar)-->
+<!--                RETURNS TABLE("Peer" varchar)-->
+<!--            AS $$-->
+<!--                SELECT DISTINCT ch.peer-->
+<!--                FROM checks ch-->
+<!--                WHERE ch.task LIKE "block" || '%'-->
+<!--            $$ LANGUAGE sql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 
     <changeSet id="v-5.0-create-fnc_task11" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -327,7 +327,7 @@
                 RETURNS TABLE(StartedBlock1 integer, StartedBlock2 integer, StartedBothBlocks integer, DidntStartAnyBlock integer)
             AS $$
                 DECLARE
-            StartedBlock1 INTEGER := (SELECT count(*) FROM PeersStartedBlock("block1"));
+                    StartedBlock1 INTEGER := (SELECT count(*) FROM PeersStartedBlock("block1"));
                     StartedBlock2 INTEGER := (SELECT count(*) FROM PeersStartedBlock("block2"));
                     StartedBothBlocks INTEGER := (SELECT count(*) FROM (
                                                                        SELECT "Peer"  FROM PeersStartedBlock("block1")
@@ -342,13 +342,13 @@
                                                                          SELECT "Peer" FROM PeersStartedBlock("block2"))
                                                                     ) AS res1);
                     AllPeers INTEGER := (SELECT count(*) FROM peers);
-            BEGIN
-            RETURN QUERY
-            SELECT StartedBlock1 * 100 / AllPeers AS StartedBlock1,
-                   StartedBlock2 * 100 / AllPeers AS StartedBlock2,
-                   StartedBothBlocks * 100 / AllPeers AS StartedBothBlocks,
-                   DidntStartAnyBlock * 100 / AllPeers AS DidntStartAnyBlock;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT StartedBlock1 * 100 / AllPeers AS StartedBlock1,
+                               StartedBlock2 * 100 / AllPeers AS StartedBlock2,
+                               StartedBothBlocks * 100 / AllPeers AS StartedBothBlocks,
+                               DidntStartAnyBlock * 100 / AllPeers AS DidntStartAnyBlock;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
@@ -359,36 +359,36 @@
              splitStatements="true"
              stripComments="true">
             CREATE OR REPLACE FUNCTION fnc_task12(IN fLIMIT integer)
-                RETURNS TABLE(peer varchar)
+                RETURNS TABLE(peer varchar, FriendsCount integer)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT peer1 AS "Peer", count(*) AS FriendsCount
-            FROM (SELECT peer1 FROM friends
-                  UNION ALL
-                  SELECT peer2 FROM friends) AS res
-            GROUP BY peer1
-            ORDER BY "FriendsCount" DESC
-                LIMIT fLIMIT;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT peer1 AS "Peer", count(*)::integer AS FriendsCount
+                        FROM (SELECT peer1 FROM friends
+                              UNION ALL
+                              SELECT peer2 FROM friends) AS res
+                        GROUP BY peer1
+                        ORDER BY FriendsCount DESC
+                        LIMIT fLIMIT;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
 
     <!--    13) Определить процент пиров, которые когда-либо успешно проходили проверку в свой день рождения-->
-    <changeSet id="v-5.0-create-helper-fnc_ChecksCountOnBirthday-task13" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION fnc_ChecksCountOnBirthday(fstate varchar)
-                RETURNS integer
-            AS $$
-            SELECT count(*) AS count_
-            FROM mv_checks ch JOIN peers p ON p.nickname = ch.peer
-            WHERE substring(ch.date::text, 5) = substring(p.birthday::text, 5) AND ch.state = fstate
-                $$ LANGUAGE sql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-helper-fnc_ChecksCountOnBirthday-task13" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION fnc_ChecksCountOnBirthday(fstate varchar)-->
+<!--                RETURNS integer-->
+<!--            AS $$-->
+<!--                SELECT count(*) AS count_-->
+<!--                FROM mv_checks ch JOIN peers p ON p.nickname = ch.peer-->
+<!--                WHERE substring(ch.date::text, 5) = substring(p.birthday::text, 5) AND ch.state = fstate-->
+<!--            $$ LANGUAGE sql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 
     <changeSet id="v-5.0-create-fnc_task13" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -398,19 +398,19 @@
                 RETURNS TABLE(SuccessfulChecks numeric, UnsuccessfulChecks numeric)
             AS $$
                 DECLARE
-            s integer := (SELECT * FROM fnc_ChecksCountOnBirthday('Success'));
+                    s integer := (SELECT * FROM fnc_ChecksCountOnBirthday('Success'));
                     f integer := (SELECT * FROM fnc_ChecksCountOnBirthday('Failure'));
-            BEGIN
-            RETURN QUERY
-            SELECT CASE
-                       WHEN (s + f) != 0 THEN round(s * 100 / (s + f)::numeric)
-                       ELSE 0
-                       END AS "SuccessfulChecks",
-                   CASE
-                       WHEN (s + f) != 0 THEN round(f * 100 / (s + f)::numeric)
-                       ELSE 0
-                       END AS "UnsuccessfulChecks";
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT CASE
+                                   WHEN (s + f) != 0 THEN round(s * 100 / (s + f)::numeric)
+                                   ELSE 0
+                                   END AS "SuccessfulChecks",
+                               CASE
+                                   WHEN (s + f) != 0 THEN round(f * 100 / (s + f)::numeric)
+                                   ELSE 0
+                                   END AS "UnsuccessfulChecks";
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
@@ -423,35 +423,37 @@
             CREATE OR REPLACE FUNCTION fnc_task14 ()
                 RETURNS TABLE(peer varchar, xp bigint)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT tmp.peer, sum(maxpoint) AS xp
-            FROM (SELECT p.nickname AS peer, t.title AS project, max(xp.xp_amount) AS maxpoint
-                  FROM xp INNER JOIN checks ch ON ch.id = xp.check_id
-                          INNER JOIN peers p ON p.nickname = ch.peer
-                          INNER JOIN tasks t ON ch.task = t.title
-                  GROUP BY 1,2
-                  ORDER BY 1,2) tmp
-            GROUP BY tmp.peer
-            ORDER BY 2 DESC;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT tmp.peer, sum(maxpoint) AS xp
+                        FROM (SELECT p.nickname AS peer, t.title AS project, max(xp.xp_amount) AS maxpoint
+                              FROM xp INNER JOIN checks ch ON ch.id = xp.check_id
+                                      INNER JOIN peers p ON p.nickname = ch.peer
+                                      INNER JOIN tasks t ON ch.task = t.title
+                              GROUP BY 1,2
+                              ORDER BY 1,2) tmp
+                        GROUP BY tmp.peer
+                        ORDER BY 2 DESC;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
     <!--    15) Определить всех пиров, которые сдали заданные задания 1 и 2, но не сдали задание 3-->
-    <changeSet id="v-5.0-create-helper-fnc_PeerCompletedTasks-task15" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION fnc_PeerCompletedTasks(fpeer text, ftask text)
-            RETURNS bool
-            AS $$
-            SELECT EXISTS (SELECT ch.peer
-                           FROM mv_checks ch
-                           WHERE ch.peer = fpeer AND ch.task = ftask AND ch.state = 'Success')
-                       $$ LANGUAGE sql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-helper-fnc_PeerCompletedTasks-task15" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION fnc_PeerCompletedTasks(fpeer text, ftask text)-->
+<!--            RETURNS bool-->
+<!--            AS $$-->
+<!--                SELECT EXISTS (SELECT ch.peer-->
+<!--                               FROM mv_checks ch-->
+<!--                               WHERE ch.peer = fpeer AND ch.task = ftask AND ch.state = 'Success')-->
+<!--            $$ LANGUAGE sql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+
     <changeSet id="v-5.0-create-fnc_task15" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
@@ -459,49 +461,51 @@
             CREATE OR REPLACE FUNCTION fnc_task15(IN firstT text, IN secondT text, IN third text)
                RETURNS TABLE(peer varchar)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT DISTINCT p.nickname
-            FROM peers p JOIN checks ch ON ch.peer = p.nickname
-            WHERE fnc_PeerCompletedTasks(p.nickname, firstT)
-              AND fnc_PeerCompletedTasks(p.nickname, secondT)
-              AND NOT fnc_PeerCompletedTasks(p.nickname, third);
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT DISTINCT p.nickname
+                        FROM peers p JOIN checks ch ON ch.peer = p.nickname
+                        WHERE fnc_PeerCompletedTasks(p.nickname, firstT)
+                          AND fnc_PeerCompletedTasks(p.nickname, secondT)
+                          AND NOT fnc_PeerCompletedTasks(p.nickname, third);
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
     <!--    16) Используя рекурсивное обобщенное табличное выражение, для каждой задачи вывести кол-во предшествующих ей задач-->
-    <changeSet id="v-5.0-create-helper-fnc-recursiveCountParent-task16" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION recursiveCountParent(tasks_ text)
-                RETURNS integer
-            AS $$
-                WITH RECURSIVE test AS (
-                    SELECT title, parent_task, 0 AS level
-                    FROM tasks
-                    WHERE title = tasks_
-                    UNION ALL
-                    SELECT t.title, t.parent_task, test.level + 1
-                    FROM tasks t
-                    JOIN test ON t.title = test.parent_task
-                )
-            SELECT max(test.level) FROM test
-                                            $$ LANGUAGE sql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-helper-fnc-recursiveCountParent-task16" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION recursiveCountParent(tasks_ text)-->
+<!--                RETURNS integer-->
+<!--            AS $$-->
+<!--                WITH RECURSIVE test AS (-->
+<!--                    SELECT title, parent_task, 0 AS level-->
+<!--                    FROM tasks-->
+<!--                    WHERE title = tasks_-->
+<!--                    UNION ALL-->
+<!--                    SELECT t.title, t.parent_task, test.level + 1-->
+<!--                    FROM tasks t-->
+<!--                    JOIN test ON t.title = test.parent_task-->
+<!--                )-->
+<!--                SELECT max(test.level) FROM test-->
+<!--            $$ LANGUAGE sql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+
     <changeSet id="v-5.0-create-fnc_task16" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
              stripComments="true">
             CREATE OR REPLACE FUNCTION fnc_task16()
-                RETURNS TABLE(title varchar, number_of_tasks integer )
+                RETURNS TABLE(title varchar, number_of_tasks integer)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT t.title, recursiveCountParent(t.title) FROM tasks t;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT t.title, recursiveCountParent(t.title) FROM tasks t;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
@@ -514,9 +518,9 @@
             CREATE OR REPLACE FUNCTION fnc_task17(IN N integer)
                 RETURNS TABLE(lucky_day date)
             AS $$
-            BEGIN
-            RETURN QUERY
-                WITH AllGroup AS
+                BEGIN
+                    RETURN QUERY
+                        WITH AllGroup AS
                         (
                             SELECT  "id",
                                     "task",
@@ -526,19 +530,20 @@
                             FROM (SELECT *, LAG("state") OVER(ORDER BY "id") AS prev
                                     FROM mv_checks) AS res
                         )
-            SELECT "date"::date
-            FROM ( SELECT "date", count(*) AS CountChecks
-                   FROM AllGroup ag JOIN xp ON xp.check_id = ag.id
-                                    JOIN tasks t ON t.title = ag."task"
-                   WHERE ag."state" = 'Success' AND xp.xp_amount > t.max_xp * 0.8
-                   GROUP BY grp, "date"
-                 ) AS res
-            GROUP BY "date"
-            HAVING max(CountChecks) >= N;
-            END;
+                        SELECT "date"::date
+                        FROM ( SELECT "date", count(*) AS CountChecks
+                               FROM AllGroup ag JOIN xp ON xp.check_id = ag.id
+                                                JOIN tasks t ON t.title = ag."task"
+                               WHERE ag."state" = 'Success' AND xp.xp_amount > t.max_xp * 0.8
+                               GROUP BY grp, "date"
+                             ) AS res
+                        GROUP BY "date"
+                        HAVING max(CountChecks) >= N;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
     <!--    18) Определить пира с наибольшим числом выполненных заданий-->
     <changeSet id="v-5.0-create-fnc_task18" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -547,21 +552,22 @@
             CREATE OR REPLACE FUNCTION fnc_task18()
                 RETURNS TABLE(peer varchar, max_complete_task bigint)
             AS $$
-            BEGIN
-            RETURN QUERY
-                WITH CompletedTask AS (
+                BEGIN
+                    RETURN QUERY
+                            WITH CompletedTask AS (
                                 SELECT ch.peer, count(*) AS count_
                                 FROM mv_checks ch
                                 WHERE ch.state = 'Success'
                                 GROUP BY ch.peer
                             )
-            SELECT ct.peer AS "Peer", count_ AS "Tasks"
-            FROM CompletedTask ct
-            WHERE ct.count_ = (SELECT max(count_) FROM CompletedTask);
-            END;
+                            SELECT ct.peer AS "Peer", count_ AS "Tasks"
+                            FROM CompletedTask ct
+                            WHERE ct.count_ = (SELECT max(count_) FROM CompletedTask);
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
     <!--    19) Определить пира с наибольшим количеством XP-->
     <changeSet id="v-5.0-create-fnc_task19" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -570,23 +576,24 @@
             CREATE OR REPLACE FUNCTION fnc_task19 ()
                RETURNS TABLE(peer varchar, max_xp bigint)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT p.nickname AS Peer, sum(xp_amount) AS XP
-            FROM checks ch
-                     INNER JOIN xp ON ch.id = xp.check_id
-                     INNER JOIN peers p ON p.nickname = ch.peer
-            GROUP BY p.nickname
-            HAVING sum(xp_amount) = (SELECT sum(xp_amount)
-                                     FROM checks ch
-                                              INNER JOIN xp ON ch.id = xp.check_id
-                                              INNER JOIN peers p ON p.nickname = ch.peer
-                                     GROUP BY p.nickname
-                                     ORDER BY 1 DESC LIMIT 1);
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT p.nickname AS Peer, sum(xp_amount) AS XP
+                        FROM checks ch
+                                 INNER JOIN xp ON ch.id = xp.check_id
+                                 INNER JOIN peers p ON p.nickname = ch.peer
+                        GROUP BY p.nickname
+                        HAVING sum(xp_amount) = (SELECT sum(xp_amount)
+                                                 FROM checks ch
+                                                          INNER JOIN xp ON ch.id = xp.check_id
+                                                          INNER JOIN peers p ON p.nickname = ch.peer
+                                                 GROUP BY p.nickname
+                                                 ORDER BY 1 DESC LIMIT 1);
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
     <!--    20) Определить пира, который провел сегодня в кампусе больше всего времени-->
     <changeSet id="v-5.0-create-fnc_task20" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -595,16 +602,16 @@
             CREATE OR REPLACE FUNCTION fnc_task20 ()
                 RETURNS TABLE (peer varchar)
             AS $$
-            BEGIN
-            RETURN QUERY
-                WITH intime AS(
+                BEGIN
+                    RETURN QUERY
+                        WITH intime AS(
                             SELECT id, tt1.peer, "time"
                             FROM time_tracking tt1
-                            WHERE state = '1' AND "date" = now()::date),
+                            WHERE state = 1 AND "date" = now()::date),
                         outtime AS(
                             SELECT id, tt2.peer, "time"
                             FROM time_tracking tt2
-                            WHERE state = '2' AND "date" = now()::date),
+                            WHERE state = 2 AND "date" = now()::date),
                         JOINtable AS (
                             SELECT DISTINCT ON (i.id) i.id AS id1, i.peer AS peer1, i."time" AS time1, o.id AS id2, o.peer AS peer2, o."time" AS time2
                             FROM intime i INNER JOIN outtime o ON i.peer = o.peer AND i."time" &lt; o."time"
@@ -617,11 +624,12 @@
                                                                 FROM JOINtable
                                                                 GROUP BY peer1
                                                                 ORDER BY 1 DESC LIMIT 1))
-            SELECT * FROM peerandmaxtime;
-            END;
+                        SELECT * FROM peerandmaxtime;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
     <!--    21) Определить пиров, приходивших раньше заданного времени не менее N раз за всё время-->
     <changeSet id="v-5.0-create-fnc_task21" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -630,20 +638,21 @@
             CREATE OR REPLACE FUNCTION fnc_task21(time_ time, mincount integer)
                 RETURNS TABLE (peer varchar)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT res.peer
-            FROM(SELECT tt.peer, "date", min("time")
-                 FROM time_tracking tt
-                 WHERE "state" = '1' AND "time" &lt; time_
-                 GROUP BY 1, 2
-                 ORDER BY 2) AS res
-            GROUP BY res.peer
-            HAVING count(*) >= mincount;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT res.peer
+                        FROM(SELECT tt.peer, "date", min("time")
+                             FROM time_tracking tt
+                             WHERE "state" = 1 AND "time" &lt; time_
+                             GROUP BY 1, 2
+                             ORDER BY 2) AS res
+                        GROUP BY res.peer
+                        HAVING count(*) >= mincount;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
     <!--    22) Определить пиров, выходивших за последние N дней из кампуса больше M раз-->
     <changeSet id="v-5.0-create-fnc_task22" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -652,20 +661,21 @@
             CREATE OR REPLACE FUNCTION fnc_task22(Ndays integer, mincount integer)
                 RETURNS TABLE (peer varchar)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT res.peer
-            FROM (SELECT tt.peer, "date", count(*) - 1 AS count_
-                  FROM time_tracking tt
-                  WHERE "state" = '1' AND "date" > (now()::date - Ndays)
-                  GROUP BY 1, 2
-                  ORDER BY 2) AS res
-            GROUP BY res.peer
-            HAVING sum(count_) > mincount;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT res.peer
+                        FROM (SELECT tt.peer, "date", count(*) - 1 AS count_
+                              FROM time_tracking tt
+                              WHERE "state" = 1 AND "date" > (now()::date - Ndays)
+                              GROUP BY 1, 2
+                              ORDER BY 2) AS res
+                        GROUP BY res.peer
+                        HAVING sum(count_) > mincount;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
     <!--    23) Определить пира, который пришел сегодня последним-->
     <changeSet id="v-5.0-create-fnc_task23" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -674,19 +684,21 @@
             CREATE OR REPLACE FUNCTION fnc_task23()
                 RETURNS TABLE (peer varchar)
             AS $$
-            BEGIN
-            RETURN QUERY
-            SELECT res.peer
-            FROM (SELECT tt.peer, "date", min("time")
-                  FROM time_tracking tt
-                  WHERE "state" = '1' AND "date" = now()::date
-                  GROUP BY 1, 2
-                  ORDER BY 3 DESC
-                      LIMIT 1) AS res;
-            END;
+                BEGIN
+                    RETURN QUERY
+                        SELECT res.peer
+                        FROM (SELECT tt.peer, "date", min("time")
+                              FROM time_tracking tt
+                              WHERE "state" = 1 AND "date" = now()::date
+                              GROUP BY 1, 2
+                              ORDER BY 3 DESC
+                              LIMIT 1) AS res;
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
+
     <!--    24) Определить пиров, которые выходили вчера из кампуса больше чем на N минут-->
     <changeSet id="v-5.0-create-fnc_task24" author="m3mpm">
         <sql endDelimiter="\nGO"
@@ -695,12 +707,12 @@
             CREATE OR REPLACE FUNCTION fnc_task24(N integer)
                 RETURNS TABLE (peer varchar)
             AS $$
-            BEGIN
-            RETURN QUERY
-                WITH in_ AS (
+                BEGIN
+                    RETURN QUERY
+                        WITH in_ AS (
                             SELECT id, tt.peer, "date", "time"
                             FROM time_tracking tt
-                            WHERE tt.state = '1' AND "date" = current_date - 1
+                            WHERE tt.state = 1 AND "date" = current_date - 1
                             AND NOT tt.time = ( SELECT min("time")
                                                 FROM time_tracking tt2
                                                 WHERE tt2.date = tt.date AND tt2.peer = tt.peer)
@@ -708,7 +720,7 @@
                         ), out_ AS(
                             SELECT id, tt.peer, "date", "time"
                             FROM time_tracking tt
-                            WHERE tt.state = '2' AND "date" = current_date - 1
+                            WHERE tt.state = 2 AND "date" = current_date - 1
                             AND NOT tt.time = ( SELECT max("time")
                                                 FROM time_tracking tt2
                                                 WHERE tt2.date = tt.date AND tt2.peer = tt.peer)
@@ -719,30 +731,34 @@
                             JOIN out_ ON in_.peer = out_.peer AND in_.date = out_.date
                             WHERE out_.time &lt; in_.time
                         )
-            SELECT InAndOut.peer
-            FROM InAndOut
-            GROUP BY InAndOut.peer
-            HAVING sum(InAndOut.in_ - InAndOut.out_) > make_time(N / 60, N - N / 60 * 60, 0.);
-            END;
+                        SELECT InAndOut.peer
+                        FROM InAndOut
+                        GROUP BY InAndOut.peer
+                        HAVING sum(InAndOut.in_ - InAndOut.out_) > make_time(N / 60, N - N / 60 * 60, 0.);
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
+
+
     <!--    25) Определить для каждого месяца процент ранних входов-->
-    <changeSet id="v-5.0-create-helper-fnc-countVisit-task25" author="m3mpm">
-        <sql endDelimiter="\nGO"
-             splitStatements="true"
-             stripComments="true">
-            CREATE OR REPLACE FUNCTION countVisit(peer_ text, mintime time DEFAULT '24:00:00')
-                RETURNS integer
-            AS $$
-            SELECT count(*) FROM ( SELECT tt.peer, tt.date
-                                   FROM time_tracking tt
-                                   WHERE tt.peer = peer_
-                                   GROUP BY 1, 2
-                                   HAVING min("time") &lt; mintime) AS res
-                $$ LANGUAGE sql;
-        </sql>
-    </changeSet>
+<!--    <changeSet id="v-5.0-create-helper-fnc-countVisit-task25" author="m3mpm">-->
+<!--        <sql endDelimiter="\nGO"-->
+<!--             splitStatements="true"-->
+<!--             stripComments="true">-->
+<!--            CREATE OR REPLACE FUNCTION countVisit(peer_ text, mintime time DEFAULT '24:00:00')-->
+<!--                RETURNS integer-->
+<!--            AS $$-->
+<!--                SELECT count(*) FROM ( SELECT tt.peer, tt.date-->
+<!--                                       FROM time_tracking tt-->
+<!--                                       WHERE tt.peer = peer_-->
+<!--                                       GROUP BY 1, 2-->
+<!--                                       HAVING min("time") &lt; mintime) AS res-->
+<!--            $$ LANGUAGE sql;-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+
+
     <changeSet id="v-5.0-create-fnc_task25" author="m3mpm">
         <sql endDelimiter="\nGO"
              splitStatements="true"
@@ -750,9 +766,9 @@
             CREATE OR REPLACE FUNCTION fnc_task25()
                 RETURNS TABLE("month" text, early_entries bigint)
             AS $$
-            BEGIN
-            RETURN QUERY
-                WITH Months AS (
+                BEGIN
+                    RETURN QUERY
+                        WITH Months AS (
                             SELECT gs::date AS list_date
                             FROM generate_series('2000-01-31', '2000-12-31', interval '1 month') AS gs),
                         VisitsInMonthOfBirth AS (
@@ -763,17 +779,16 @@
                                       LEFT JOIN peers p ON EXTRACT(MONTH FROM list_date) = EXTRACT(MONTH FROM p.birthday::date)
                              GROUP BY list_date
                         )
-            SELECT name_month,
-                   CASE WHEN "AllVisits" = 0
-                            THEN 0
-                        ELSE ("EarlyVisits" * 100 / "AllVisits")
-                       END AS "EarlyEntries"
-            FROM VisitsInMonthOfBirth
-            ORDER BY to_date(name_month, 'Mon');
-            END;
+                        SELECT name_month,
+                               CASE WHEN "AllVisits" = 0
+                                        THEN 0
+                                    ELSE ("EarlyVisits" * 100 / "AllVisits")
+                               END AS "EarlyEntries"
+                        FROM VisitsInMonthOfBirth
+                        ORDER BY to_date(name_month, 'Mon');
+                END;
             $$ LANGUAGE plpgsql;
         </sql>
     </changeSet>
-
 
 </databaseChangeLog>
