@@ -25,7 +25,7 @@ public class PeerController {
     @GetMapping()
     public String showAllPeers(Model model) {
         List<PeerDto> listPeers = peerService.getAllPeers();
-        model.addAttribute("peers", listPeers);
+        model.addAttribute("listPeers", listPeers);
         return "peer/showAllPeers";
     }
 }
