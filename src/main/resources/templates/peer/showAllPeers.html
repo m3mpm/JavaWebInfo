@@ -34,7 +34,7 @@
                 <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}">Nickname</a></td>
                 <td th:text="${peer.birthday}">Birthday</td>
                 <td>
-                    <button> <a th:href="@{peers/edit/{nickname}(nickname=${peer.nickname})}">Edit</a></button>
+                    <button> <a th:href="@{peers/{nickname}/edit(nickname=${peer.nickname})}">Edit</a></button>
                 </td>
                 <td>
                     <form th:action="@{/peers/delete}" th:method="post" th:object="${deletedPeer}">

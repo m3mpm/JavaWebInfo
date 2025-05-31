@@ -32,7 +32,13 @@ public class PeerController {
 
     @GetMapping("/{nickname}")
     public String showPeer(Model model, @PathVariable("nickname") String nickname) {
-        model.addAttribute("peer", peerService.getPeerByNickname(nickname));
+        model.addAttribute("peerDto", peerService.getPeerByNickname(nickname));
         return "peer/showPeer";
+    }
+
+    @GetMapping("/{nickname}/edit")
+    public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
+        model.addAttribute("editPeerDto", peerService.getPeerByNickname(nickname));
+        return "peer/editPeer";
     }
 }
