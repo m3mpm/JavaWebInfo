@@ -25,4 +25,9 @@ public class PeerService {
     public List<PeerDto> getAllPeers() {
         return peerRepository.findAll().stream().map(peerMapper::peerToPeerDto).collect(Collectors.toList());
     }
+
+    public PeerDto getPeerByNickname(String nickname) {
+        PeerDto peerDto = peerRepository.findAll().stream().filter(peer -> peer.getNickname().equals(nickname)).map(peerMapper::peerToPeerDto).findFirst().orElse(null);
+        return peerDto;
+    }
 }
