@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/peers")
@@ -23,12 +26,35 @@ public class PeerController {
         this.peerService = peerService;
     }
 
+
+    /* ver.1 */
+//    @GetMapping()
+//    public String showAllPeers(Model model) {
+//        Optional<List<PeerDto>> optionalPeersDto = peerService.getAllPeers();
+//        if (optionalPeersDto.isPresent()) {
+//            model.addAttribute("listPeers", optionalPeersDto.get());
+//            return "peer/showAllPeers";
+//        } else {
+//            return "redirect:/";
+//        }
+//    }
+
+    /* ver.2 */
+//    @GetMapping()
+//    public String showAllPeers(Model model) {
+//        List<PeerDto> listPeers = peerService.getAllPeers().orElse(Collections.emptyList());
+//        model.addAttribute("listPeers", listPeers);
+//        return "peer/showAllPeers";
+//    }
+
+    /* ver.3 */
     @GetMapping()
     public String showAllPeers(Model model) {
         List<PeerDto> listPeers = peerService.getAllPeers();
         model.addAttribute("listPeers", listPeers);
         return "peer/showAllPeers";
     }
+
 
     @GetMapping("/{nickname}")
     public String showPeer(Model model, @PathVariable("nickname") String nickname) {

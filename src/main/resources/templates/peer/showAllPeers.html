@@ -29,6 +29,9 @@
             </tr>
             </thead>
             <tbody>
+            <tr th:if="${#lists.isEmpty(listPeers)}">
+                <td colspan="5">ТАБЛИЦА PEERS ПУСТАЯ</td>
+            </tr>
             <tr th:each="peer,iter : ${listPeers}">
                 <td th:text="${iter.index} + 1">ID</td>
                 <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}">Nickname</a></td>
