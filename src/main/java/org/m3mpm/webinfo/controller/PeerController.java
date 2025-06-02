@@ -67,9 +67,21 @@ public class PeerController {
         return "peer/showPeer";
     }
 
+//    @GetMapping("/{nickname}/edit")
+//    public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
+//        model.addAttribute("editPeerDto", peerService.getPeerByNickname(nickname));
+//        return "peer/editPeer";
+//    }
+
     @GetMapping("/{nickname}/edit")
     public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
-        model.addAttribute("editPeerDto", peerService.getPeerByNickname(nickname));
-        return "peer/editPeer";
+        Optional<PeerDto> peerDto = peerService.getPeerByNickname(nickname);
+        if (peerDto.isPresent()) {
+            model.addAttribute("editPeerDto", peerDto.get());
+            return "peer/editPeer";
+        } else {
+            model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
+            return "peer/showPeer";
+        }
     }
 }
