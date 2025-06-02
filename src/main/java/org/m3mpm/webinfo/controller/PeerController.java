@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -67,12 +68,6 @@ public class PeerController {
         return "peer/showPeer";
     }
 
-//    @GetMapping("/{nickname}/edit")
-//    public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
-//        model.addAttribute("editPeerDto", peerService.getPeerByNickname(nickname));
-//        return "peer/editPeer";
-//    }
-
     @GetMapping("/{nickname}/edit")
     public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
         Optional<PeerDto> peerDto = peerService.getPeerByNickname(nickname);
@@ -83,5 +78,10 @@ public class PeerController {
             model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
             return "peer/showPeer";
         }
+    }
+
+    @GetMapping("/new")
+    public String newPeer(@ModelAttribute("newPeerDto") PeerDto peerDto) {
+        return "/peer/newPeer";
     }
 }
