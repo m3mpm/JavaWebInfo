@@ -58,7 +58,12 @@ public class PeerController {
 
     @GetMapping("/{nickname}")
     public String showPeer(Model model, @PathVariable("nickname") String nickname) {
-        model.addAttribute("peerDto", peerService.getPeerByNickname(nickname));
+        Optional<PeerDto> peerDto = peerService.getPeerByNickname(nickname);
+        if (peerDto.isPresent()) {
+            model.addAttribute("peerDto", peerDto.get());
+        } else {
+            model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
+        }
         return "peer/showPeer";
     }
 

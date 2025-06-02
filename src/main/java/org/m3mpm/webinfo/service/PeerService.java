@@ -48,8 +48,8 @@ public class PeerService {
     }
 
 
-    public PeerDto getPeerByNickname(String nickname) {
-        PeerDto peerDto = peerRepository.findAll().stream().filter(peer -> peer.getNickname().equals(nickname)).map(peerMapper::peerToPeerDto).findFirst().orElse(null);
-        return peerDto;
+    public Optional<PeerDto> getPeerByNickname(String nickname) {
+        Optional<PeerEntity> optionalPeerEntity = peerRepository.findPeerEntityByNickname(nickname);
+        return optionalPeerEntity.map(peerMapper::peerToPeerDto);
     }
 }
