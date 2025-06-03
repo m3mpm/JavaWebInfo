@@ -57,4 +57,8 @@ public class PeerService {
         return optionalPeerEntity.map(peerMapper::peerToPeerDto);
     }
 
+    public void savePeer(PeerDto peerDto) {
+        peerRepository.save(peerMapper.peerDtoToPeer(peerDto));
+    }
+
 }
