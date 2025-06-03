@@ -59,7 +59,7 @@ public class PeerController {
 
     @GetMapping("/{nickname}")
     public String showPeer(Model model, @PathVariable("nickname") String nickname) {
-        Optional<PeerDto> peerDto = peerService.getPeerByNickname(nickname);
+        Optional<PeerDto> peerDto = peerService.getPeerById(nickname);
         if (peerDto.isPresent()) {
             model.addAttribute("peerDto", peerDto.get());
         } else {
@@ -70,7 +70,7 @@ public class PeerController {
 
     @GetMapping("/{nickname}/edit")
     public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
-        Optional<PeerDto> peerDto = peerService.getPeerByNickname(nickname);
+        Optional<PeerDto> peerDto = peerService.getPeerById(nickname);
         if (peerDto.isPresent()) {
             model.addAttribute("editPeerDto", peerDto.get());
             return "peer/editPeer";

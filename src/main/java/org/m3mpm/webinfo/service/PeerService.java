@@ -47,9 +47,14 @@ public class PeerService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<PeerDto> getPeerById(String id) {
+        Optional<PeerEntity> optionalPeerEntity = peerRepository.findById(id);
+        return optionalPeerEntity.map(peerMapper::peerToPeerDto);
+    }
 
     public Optional<PeerDto> getPeerByNickname(String nickname) {
         Optional<PeerEntity> optionalPeerEntity = peerRepository.findPeerEntityByNickname(nickname);
         return optionalPeerEntity.map(peerMapper::peerToPeerDto);
     }
+
 }
