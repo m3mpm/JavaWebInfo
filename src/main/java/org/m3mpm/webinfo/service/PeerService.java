@@ -61,4 +61,12 @@ public class PeerService {
         peerRepository.save(peerMapper.peerDtoToPeer(peerDto));
     }
 
+    public boolean deletePeer(PeerDto deletePeerDto) {
+        boolean deleted = false;
+        if(peerRepository.existsById(deletePeerDto.getNickname())){
+            peerRepository.deleteById(deletePeerDto.getNickname());
+            deleted = true;
+        }
+        return deleted;
+    }
 }

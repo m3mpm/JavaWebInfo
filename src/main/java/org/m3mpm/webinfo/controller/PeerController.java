@@ -24,7 +24,6 @@ public class PeerController {
         this.peerService = peerService;
     }
 
-
     /* ver.1 */
 //    @GetMapping()
 //    public String showAllPeers(Model model) {
@@ -59,10 +58,11 @@ public class PeerController {
         Optional<PeerDto> peerDto = peerService.getPeerById(nickname);
         if (peerDto.isPresent()) {
             model.addAttribute("peerDto", peerDto.get());
+            return "peer/showPeer";
         } else {
             model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
+            return "peer/peerNotFound";
         }
-        return "peer/showPeer";
     }
 
     @GetMapping("/{nickname}/edit")
@@ -73,7 +73,7 @@ public class PeerController {
             return "peer/editPeer";
         } else {
             model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
-            return "peer/showPeer";
+            return "peer/peerNotFound";
         }
     }
 
@@ -86,5 +86,13 @@ public class PeerController {
     public String addPeer(@ModelAttribute("newPeerDto") PeerDto peerDto){
         peerService.savePeer(peerDto);
         return "redirect:/peers";
+    }
+
+    @PostMapping("/delete")
+    public String deletePeer(@ModelAttribute("deletePeerDto") PeerDto peerDto){
+        if(peerService.deletePeer(peerDto))
+            return "redirect:/peers";
+        else
+            return "peer/peerNotFound";
     }
 }
