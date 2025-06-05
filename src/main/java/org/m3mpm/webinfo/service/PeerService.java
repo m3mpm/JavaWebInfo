@@ -73,14 +73,11 @@ public class PeerService {
 
     @Transactional
     public void updatePeer(PeerDto editPeerDto) {
-        boolean added = false;
         Optional<PeerEntity> optionalPeerEntity = peerRepository.findById(editPeerDto.getNickname());
         if(optionalPeerEntity.isPresent()){
             PeerEntity peerEntity = optionalPeerEntity.get();
             peerMapper.updatePeerFromDto(editPeerDto, peerEntity);
             peerRepository.save(peerEntity);
-            added = true;
         }
-//        return added;
     }
 }
