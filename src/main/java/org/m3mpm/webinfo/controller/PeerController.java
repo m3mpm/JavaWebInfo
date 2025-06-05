@@ -71,9 +71,13 @@ public class PeerController {
     }
 
     @PostMapping("/add")
-    public String addPeer(@ModelAttribute("newPeerDto") PeerDto peerDto){
-        peerService.savePeer(peerDto);
-        return "redirect:/peers";
+    public String addPeer(Model model, @ModelAttribute("newPeerDto") PeerDto peerDto){
+        if(peerService.savePeer(peerDto)){
+            return "redirect:/peers";
+        } else {
+            model.addAttribute("errorMessage", "Peer with nickname '" + peerDto.getNickname() + "' is already exists.");
+            return "peer/existPeer";
+        }
     }
 
     @PostMapping("/delete")

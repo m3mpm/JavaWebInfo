@@ -58,8 +58,13 @@ public class PeerService {
         return optionalPeerEntity.map(peerMapper::peerToPeerDto);
     }
 
-    public void savePeer(PeerDto peerDto) {
-        peerRepository.save(peerMapper.peerDtoToPeer(peerDto));
+    public boolean savePeer(PeerDto peerDto) {
+        boolean added = false;
+        if(!peerRepository.existsById(peerDto.getNickname())){
+            peerRepository.save(peerMapper.peerDtoToPeer(peerDto));
+            added = true;
+        }
+        return added;
     }
 
     public boolean deletePeer(PeerDto deletePeerDto) {
