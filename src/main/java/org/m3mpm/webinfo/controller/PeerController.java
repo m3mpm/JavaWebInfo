@@ -65,18 +65,6 @@ public class PeerController {
         }
     }
 
-    @GetMapping("/{nickname}/edit")
-    public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
-        Optional<PeerDto> peerDto = peerService.getPeerById(nickname);
-        if (peerDto.isPresent()) {
-            model.addAttribute("editPeerDto", peerDto.get());
-            return "peer/editPeer";
-        } else {
-            model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
-            return "peer/peerNotFound";
-        }
-    }
-
     @GetMapping("/new")
     public String newPeer(@ModelAttribute("newPeerDto") PeerDto peerDto) {
         return "/peer/newPeer";
@@ -94,5 +82,23 @@ public class PeerController {
             return "redirect:/peers";
         else
             return "peer/peerNotFound";
+    }
+
+    @GetMapping("/{nickname}/edit")
+    public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
+        Optional<PeerDto> peerDto = peerService.getPeerById(nickname);
+        if (peerDto.isPresent()) {
+            model.addAttribute("editPeerDto", peerDto.get());
+            return "peer/editPeer";
+        } else {
+            model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
+            return "peer/peerNotFound";
+        }
+    }
+
+    @PostMapping("/update")
+    public String editPeer(@ModelAttribute("editPeerDto") PeerDto editPeerDto) {
+        peerService.updatePeer(editPeerDto);
+        return "redirect:/peers";
     }
 }

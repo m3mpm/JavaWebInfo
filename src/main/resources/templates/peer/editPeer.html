@@ -16,7 +16,7 @@
 
     <h3>Edit Peer</h3>
 
-    <form th:action="@{/peers/{nickname}/edit(nickname=${editPeerDto.getNickname()})}" th:method="post" th:object="${editPeerDto}">
+    <form th:action="@{/peers/update}" th:method="post" th:object="${editPeerDto}">
 
       <div>
           <label for="nickname">Name</label>

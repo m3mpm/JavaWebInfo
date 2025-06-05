@@ -1,5 +1,6 @@
 package org.m3mpm.webinfo.service;
 
+import jakarta.transaction.Transactional;
 import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.entity.PeerEntity;
 import org.m3mpm.webinfo.mapper.PeerMapper;
@@ -68,5 +69,18 @@ public class PeerService {
             deleted = true;
         }
         return deleted;
+    }
+
+    @Transactional
+    public void updatePeer(PeerDto editPeerDto) {
+        boolean added = false;
+        Optional<PeerEntity> optionalPeerEntity = peerRepository.findById(editPeerDto.getNickname());
+        if(optionalPeerEntity.isPresent()){
+            PeerEntity peerEntity = optionalPeerEntity.get();
+            peerMapper.updatePeerFromDto(editPeerDto, peerEntity);
+            peerRepository.save(peerEntity);
+            added = true;
+        }
+//        return added;
     }
 }
