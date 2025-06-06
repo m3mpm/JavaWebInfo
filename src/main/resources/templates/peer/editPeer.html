@@ -18,7 +18,13 @@
 
     <form th:action="@{/peers/update}" th:method="post" th:object="${editPeerDto}">
 
-      <div>
+        <div th:if="${#fields.hasAnyErrors()}" >
+                <span class="validationError">
+                    Please correct the problems below and submit again.
+                </span>
+        </div>
+
+        <div>
           <label for="nickname">Name</label>
           <input type="text" th:field="*{nickname}" id="nickname" placeholder="Nickname" readonly>
           <span class="validationError" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error Message</span>
@@ -28,7 +34,7 @@
           <span class="validationError" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Birthday Error Message</span>
           <br>
           <input type="submit" value="Edit Peer">
-      </div>
+        </div>
 
     </form>
 
