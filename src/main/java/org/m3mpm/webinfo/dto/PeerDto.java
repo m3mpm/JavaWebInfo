@@ -11,10 +11,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Builder
 public class PeerDto {
 
     @NotBlank(message = "Nickname is required and cannot be empty.")
