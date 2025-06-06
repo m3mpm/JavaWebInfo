@@ -1,11 +1,13 @@
 package org.m3mpm.webinfo.controller;
 
 
+import jakarta.validation.Valid;
 import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.service.PeerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -71,7 +73,12 @@ public class PeerController {
     }
 
     @PostMapping("/add")
-    public String addPeer(Model model, @ModelAttribute("newPeerDto") PeerDto peerDto){
+    public String addPeer(Model model, @Valid @ModelAttribute("newPeerDto") PeerDto peerDto, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("newPeerDto", peerDto);
+            return "/peer/newPeer";
+        }
+
         if(peerService.savePeer(peerDto)){
             return "redirect:/peers";
         } else {
@@ -101,7 +108,11 @@ public class PeerController {
     }
 
     @PostMapping("/update")
-    public String editPeer(@ModelAttribute("editPeerDto") PeerDto editPeerDto) {
+    public String editPeer(Model model, @Valid @ModelAttribute("editPeerDto") PeerDto editPeerDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("editPeerDto", editPeerDto);
+            return "peer/editPeer";
+        }
         peerService.updatePeer(editPeerDto);
         return "redirect:/peers";
     }

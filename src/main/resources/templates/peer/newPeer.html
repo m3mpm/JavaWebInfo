@@ -19,9 +19,11 @@
       <div>
         <label for="nickname">Name</label>
         <input type="text" th:field="*{nickname}" id="nickname" placeholder="Nickname">
+        <span class="validationError" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error Message</span>
         <br>
         <label for="birthday">Birthday</label>
-        <input type="date" th:field="*{birthday}" id="birthday" placeholder="YYYY-MM-DD">
+        <input type="date" th:field="*{birthday}" id="birthday" placeholder="YYYY-MM-DD" th:value="${#temporals.format(newPeerDto.birthday, 'yyyy-MM-dd')}">
+        <span class="validationError" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Birthday Error Message</span>
         <br>
         <input type="submit" value="Add Peer">
       </div>

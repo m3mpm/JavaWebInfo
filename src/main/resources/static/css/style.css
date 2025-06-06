@@ -20,3 +20,7 @@ button a {
     color: black;
     text-decoration: none;
 }
+
+span.validationError {
+    color: red;
+}
