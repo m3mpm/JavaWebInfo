@@ -29,16 +29,28 @@
 
     <changeSet id="v-1.0-create-table-tasks" author="m3mpm">
         <createTable tableName="tasks">
+
             <column name="title" type="varchar" defaultValue="NULL">
                 <constraints primaryKey="true" unique="true"/>
             </column>
+
             <column name="parent_task" type="varchar" defaultValue="NULL">
                 <constraints foreignKeyName="fk_tasks_parentTask" references="tasks(title)"
                              nullable="true" deleteCascade="true"/>
             </column>
+
             <column name="max_xp" type="integer">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
         </createTable>
     </changeSet>
 
