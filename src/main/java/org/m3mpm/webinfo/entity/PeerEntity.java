@@ -1,14 +1,12 @@
 package org.m3mpm.webinfo.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -30,6 +28,9 @@ public class PeerEntity {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "peer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CheckEntity> checkedPeers;
 
     public PeerEntity() {
     }
@@ -69,6 +70,14 @@ public class PeerEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<CheckEntity> getCheckedPeers() {
+        return checkedPeers;
+    }
+
+    public void setCheckedPeers(List<CheckEntity> checkedPeers) {
+        this.checkedPeers = checkedPeers;
     }
 
     @Override
