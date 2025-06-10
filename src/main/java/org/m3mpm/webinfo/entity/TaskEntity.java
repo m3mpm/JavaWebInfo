@@ -1,10 +1,7 @@
 package org.m3mpm.webinfo.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +21,9 @@ public class TaskEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "parent_task")
-    private String parentTask;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_task", referencedColumnName = "title")
+    private TaskEntity parentTask;
 
     @Column(name = "max_xp")
     private Integer maxXp;
