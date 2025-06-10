@@ -56,20 +56,33 @@
 
     <changeSet id="v-1.0-create-table-checks" author="m3mpm">
         <createTable tableName="checks">
+
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+
             <column name="peer" type="varchar">
                 <constraints foreignKeyName="fk_checks_peers" references="peers(nickname)"
                              nullable="false" deleteCascade="true"/>
             </column>
+
             <column name="task" type="varchar">
                 <constraints foreignKeyName="fk_checks_tasks" references="tasks(title)"
                              nullable="false" deleteCascade="true"/>
             </column>
+
             <column name="date" type="date">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
         </createTable>
     </changeSet>
 
