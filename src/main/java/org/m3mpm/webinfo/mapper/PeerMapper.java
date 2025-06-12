@@ -2,23 +2,22 @@ package org.m3mpm.webinfo.mapper;
 
 import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.entity.PeerEntity;
+import org.m3mpm.webinfo.exception.EntityNotFoundException;
+import org.m3mpm.webinfo.repository.PeerRepository;
 import org.m3mpm.webinfo.service.PeerService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Optional;
 
 @Mapper(componentModel = "spring",
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public abstract class PeerMapper {
 
-
-    private final PeerService peerService;
+    private final PeerRepository peerRepository;
 
     @Autowired
-    public PeerMapper(PeerService peerService) {
-        this.peerService = peerService;
+    public PeerMapper(PeerRepository peerRepository) {
+        this.peerRepository = peerRepository;
     }
 
     public abstract PeerDto peerToPeerDto(PeerEntity peer);
@@ -34,7 +33,8 @@ public abstract class PeerMapper {
 
     @Named("stringToPeerEntity")
     PeerEntity stringToPeerEntity(String nickname) {
-        return peerService.getPeerById(nickname).map(this::peerDtoToPeer).orElse(new PeerEntity());
+        return peerRepository.findById(nickname).
+                orElseThrow(() -> new EntityNotFoundException("Peer with nickname '" + nickname + "' not found."));
     }
 
 }

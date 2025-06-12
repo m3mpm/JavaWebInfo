@@ -10,8 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,14 +55,10 @@ public class PeerController {
 
     @GetMapping("/{nickname}")
     public String showPeer(Model model, @PathVariable("nickname") String nickname) {
-        Optional<PeerDto> peerDto = peerService.getPeerById(nickname);
-        if (peerDto.isPresent()) {
-            model.addAttribute("peerDto", peerDto.get());
-            return "peer/showPeer";
-        } else {
-            model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
-            return "peer/peerNotFound";
-        }
+        PeerDto peerDto = peerService.getPeerById(nickname);
+        model.addAttribute("peerDto", peerDto);
+        return "peer/showPeer";
+
     }
 
     @GetMapping("/new")
@@ -73,13 +67,13 @@ public class PeerController {
     }
 
     @PostMapping("/add")
-    public String addPeer(Model model, @Valid @ModelAttribute("newPeerDto") PeerDto peerDto, BindingResult bindingResult){
+    public String addPeer(Model model, @Valid @ModelAttribute("newPeerDto") PeerDto peerDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("newPeerDto", peerDto);
             return "/peer/newPeer";
         }
 
-        if(peerService.savePeer(peerDto)){
+        if (peerService.savePeer(peerDto)) {
             return "redirect:/peers";
         } else {
             model.addAttribute("errorMessage", "Peer with nickname '" + peerDto.getNickname() + "' is already exists.");
@@ -88,8 +82,8 @@ public class PeerController {
     }
 
     @PostMapping("/delete")
-    public String deletePeer(@ModelAttribute("deletePeerDto") PeerDto peerDto){
-        if(peerService.deletePeer(peerDto))
+    public String deletePeer(@ModelAttribute("deletePeerDto") PeerDto peerDto) {
+        if (peerService.deletePeer(peerDto))
             return "redirect:/peers";
         else
             return "peer/peerNotFound";
@@ -97,14 +91,9 @@ public class PeerController {
 
     @GetMapping("/{nickname}/edit")
     public String showEditPeer(Model model, @PathVariable("nickname") String nickname) {
-        Optional<PeerDto> peerDto = peerService.getPeerById(nickname);
-        if (peerDto.isPresent()) {
-            model.addAttribute("editPeerDto", peerDto.get());
-            return "peer/editPeer";
-        } else {
-            model.addAttribute("errorMessage", "Peer with nickname '" + nickname + "' not found.");
-            return "peer/peerNotFound";
-        }
+        PeerDto peerDto = peerService.getPeerById(nickname);
+        model.addAttribute("editPeerDto", peerDto);
+        return "peer/editPeer";
     }
 
     @PostMapping("/update")

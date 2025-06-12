@@ -3,6 +3,7 @@ package org.m3mpm.webinfo.service;
 import jakarta.transaction.Transactional;
 import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.entity.PeerEntity;
+import org.m3mpm.webinfo.exception.EntityNotFoundException;
 import org.m3mpm.webinfo.mapper.PeerMapper;
 import org.m3mpm.webinfo.repository.PeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,11 @@ public class PeerServiceImp implements PeerService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<PeerDto> getPeerById(String id) {
-        Optional<PeerEntity> optionalPeerEntity = peerRepository.findById(id);
-        return optionalPeerEntity.map(peerMapper::peerToPeerDto);
+    public PeerDto getPeerById(String id) {
+        return peerRepository.
+                findById(id).
+                map(peerMapper::peerToPeerDto).
+                orElseThrow(() -> new EntityNotFoundException("Peer with nickname '" + id + "' not found."));
     }
 
     public Optional<PeerDto> getPeerByNickname(String nickname) {
@@ -60,7 +63,7 @@ public class PeerServiceImp implements PeerService {
 
     public boolean savePeer(PeerDto peerDto) {
         boolean added = false;
-        if(!peerRepository.existsById(peerDto.getNickname())){
+        if (!peerRepository.existsById(peerDto.getNickname())) {
             peerRepository.save(peerMapper.peerDtoToPeer(peerDto));
             added = true;
         }
@@ -69,7 +72,7 @@ public class PeerServiceImp implements PeerService {
 
     public boolean deletePeer(PeerDto deletePeerDto) {
         boolean deleted = false;
-        if(peerRepository.existsById(deletePeerDto.getNickname())){
+        if (peerRepository.existsById(deletePeerDto.getNickname())) {
             peerRepository.deleteById(deletePeerDto.getNickname());
             deleted = true;
         }
@@ -79,7 +82,7 @@ public class PeerServiceImp implements PeerService {
     @Transactional
     public void updatePeer(PeerDto editPeerDto) {
         Optional<PeerEntity> optionalPeerEntity = peerRepository.findById(editPeerDto.getNickname());
-        if(optionalPeerEntity.isPresent()){
+        if (optionalPeerEntity.isPresent()) {
             PeerEntity peerEntity = optionalPeerEntity.get();
             peerMapper.updatePeerFromDto(editPeerDto, peerEntity);
             peerRepository.save(peerEntity);
