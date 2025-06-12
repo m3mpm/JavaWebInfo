@@ -13,12 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public abstract class PeerMapper {
 
-    private final PeerRepository peerRepository;
-
     @Autowired
-    public PeerMapper(PeerRepository peerRepository) {
-        this.peerRepository = peerRepository;
-    }
+    private PeerRepository peerRepository;
 
     public abstract PeerDto peerToPeerDto(PeerEntity peer);
 
