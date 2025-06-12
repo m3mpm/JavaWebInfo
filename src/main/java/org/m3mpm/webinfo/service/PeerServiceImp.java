@@ -42,6 +42,7 @@ public class PeerServiceImp implements PeerService {
 //    }
 
     /* ver.3 */
+    @Override
     public List<PeerDto> getAllPeers() {
         List<PeerEntity> peersList = peerRepository.findAll();
         return peersList.stream()
@@ -49,6 +50,7 @@ public class PeerServiceImp implements PeerService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public PeerDto getPeerById(String id) {
         return peerRepository.
                 findById(id).
@@ -56,11 +58,13 @@ public class PeerServiceImp implements PeerService {
                 orElseThrow(() -> new EntityNotFoundException("Peer with nickname '" + id + "' not found."));
     }
 
+    @Override
     public Optional<PeerDto> getPeerByNickname(String nickname) {
         Optional<PeerEntity> optionalPeerEntity = peerRepository.findPeerEntityByNickname(nickname);
         return optionalPeerEntity.map(peerMapper::peerToPeerDto);
     }
 
+    @Override
     public boolean savePeer(PeerDto peerDto) {
         boolean added = false;
         if (!peerRepository.existsById(peerDto.getNickname())) {
@@ -70,6 +74,7 @@ public class PeerServiceImp implements PeerService {
         return added;
     }
 
+    @Override
     public boolean deletePeer(PeerDto deletePeerDto) {
         boolean deleted = false;
         if (peerRepository.existsById(deletePeerDto.getNickname())) {
@@ -79,7 +84,7 @@ public class PeerServiceImp implements PeerService {
         return deleted;
     }
 
-    @Transactional
+    @Override
     public void updatePeer(PeerDto editPeerDto) {
         Optional<PeerEntity> optionalPeerEntity = peerRepository.findById(editPeerDto.getNickname());
         if (optionalPeerEntity.isPresent()) {
