@@ -85,13 +85,12 @@ public class PeerServiceImp implements PeerService {
     }
 
     @Override
-    public boolean deletePeer(PeerDto deletePeerDto) {
-        boolean deleted = false;
+    public void deletePeer(PeerDto deletePeerDto) {
         if (peerRepository.existsById(deletePeerDto.getNickname())) {
             peerRepository.deleteById(deletePeerDto.getNickname());
-            deleted = true;
+        } else {
+            throw new EntityNotFoundException("Peer with nickname '" + deletePeerDto.getNickname() + "' not found.");
         }
-        return deleted;
     }
 
     @Override

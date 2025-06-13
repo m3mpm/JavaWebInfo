@@ -83,10 +83,8 @@ public class PeerController {
 
     @PostMapping("/delete")
     public String deletePeer(@ModelAttribute("deletePeerDto") PeerDto peerDto) {
-        if (peerService.deletePeer(peerDto))
-            return "redirect:/peers";
-        else
-            return "peer/peerNotFound";
+        peerService.deletePeer(peerDto);
+        return "redirect:/peers";
     }
 
     @GetMapping("/{nickname}/edit")

@@ -14,7 +14,7 @@ public interface PeerService {
 
     boolean savePeer(PeerDto peerDto);
 
-    boolean deletePeer(PeerDto peerDto);
+    void deletePeer(PeerDto peerDto);
 
     void updatePeer(PeerDto peerDto);
 }
