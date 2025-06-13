@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Show Peer</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+<div class="parent">
+    <div class="block">
+        <h2>Info</h2>
+
+        <p th:text="${errorMessage}">Error info</p>
+
+        <!-- Перенаправление зависит от типа сущности -->
+        <a th:if="${entityName == 'Peer'}" th:href="@{'/peers'}">Back to list of Peers</a>
+        <a th:if="${entityName == 'Task'}" th:href="@{'/tasks'}">Back to list of Tasks</a>
+        <a th:if="${entityName == 'Check'}" th:href="@{'/checks'}">Back to list of Checks</a>
+
+        <!-- По умолчанию отправляем на главную страницу -->
+        <a th:unless="${entityName != null and #strings.length(entityName) > 0}" th:href="@{/}">Back to welcome page</a>
+
+    </div>
+</div>
+
+</body>
+</html>

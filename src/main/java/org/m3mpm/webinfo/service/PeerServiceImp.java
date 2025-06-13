@@ -50,6 +50,7 @@ public class PeerServiceImp implements PeerService {
                 .collect(Collectors.toList());
     }
 
+    /* ver. 1*/
     @Override
     public PeerDto getPeerById(String id) {
         return peerRepository.
@@ -57,6 +58,15 @@ public class PeerServiceImp implements PeerService {
                 map(peerMapper::peerToPeerDto).
                 orElseThrow(() -> new EntityNotFoundException("Peer with nickname '" + id + "' not found."));
     }
+
+    /* ver. 2*/
+//    @Override
+//    public PeerDto getPeerById(String id) {
+//        return peerRepository.
+//                findById(id).
+//                map(peerMapper::peerToPeerDto).
+//                orElseThrow(() -> new EntityNotFoundException("Peer with nickname '" + id + "' not found.", "Peer"));
+//    }
 
     @Override
     public Optional<PeerDto> getPeerByNickname(String nickname) {
