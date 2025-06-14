@@ -86,20 +86,20 @@ public class PeerServiceImp implements PeerService {
     }
 
     @Override
-    public void deletePeer(PeerDto deletePeerDto) {
-        if (peerRepository.existsById(deletePeerDto.getNickname())) {
-            peerRepository.deleteById(deletePeerDto.getNickname());
+    public void deletePeer(PeerDto peerDto) {
+        if (peerRepository.existsById(peerDto.getNickname())) {
+            peerRepository.deleteById(peerDto.getNickname());
         } else {
-            throw new EntityNotFoundException("Peer with nickname '" + deletePeerDto.getNickname() + "' not found.");
+            throw new EntityNotFoundException("Peer with nickname '" + peerDto.getNickname() + "' not found.");
         }
     }
 
     @Override
-    public void updatePeer(PeerDto editPeerDto) {
-        Optional<PeerEntity> optionalPeerEntity = peerRepository.findById(editPeerDto.getNickname());
+    public void updatePeer(PeerDto peerDto) {
+        Optional<PeerEntity> optionalPeerEntity = peerRepository.findById(peerDto.getNickname());
         if (optionalPeerEntity.isPresent()) {
             PeerEntity peerEntity = optionalPeerEntity.get();
-            peerMapper.updatePeerFromDto(editPeerDto, peerEntity);
+            peerMapper.updatePeerFromDto(peerDto, peerEntity);
             peerRepository.save(peerEntity);
         }
     }
