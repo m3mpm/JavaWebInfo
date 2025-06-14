@@ -3,6 +3,7 @@ package org.m3mpm.webinfo.service;
 import jakarta.transaction.Transactional;
 import org.m3mpm.webinfo.dto.PeerDto;
 import org.m3mpm.webinfo.entity.PeerEntity;
+import org.m3mpm.webinfo.exception.EntityAlreadyExistsException;
 import org.m3mpm.webinfo.exception.EntityNotFoundException;
 import org.m3mpm.webinfo.mapper.PeerMapper;
 import org.m3mpm.webinfo.repository.PeerRepository;
@@ -75,13 +76,13 @@ public class PeerServiceImp implements PeerService {
     }
 
     @Override
-    public boolean savePeer(PeerDto peerDto) {
-        boolean added = false;
+    public void savePeer(PeerDto peerDto) {
         if (!peerRepository.existsById(peerDto.getNickname())) {
             peerRepository.save(peerMapper.peerDtoToPeer(peerDto));
-            added = true;
+        } else {
+            throw new EntityAlreadyExistsException("Peer with nickname '" + peerDto.getNickname() + "' is already exists.");
         }
-        return added;
+
     }
 
     @Override

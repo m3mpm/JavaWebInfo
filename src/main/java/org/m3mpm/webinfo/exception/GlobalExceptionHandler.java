@@ -32,6 +32,14 @@ public class GlobalExceptionHandler {
         return "exception/entityNotFound";
     }
 
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public String handleEntityAlreadyExists(EntityAlreadyExistsException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        String entityName = extractEntityNameFromException(ex.getMessage());
+        model.addAttribute("entityName", entityName);
+        return "exception/entityAlreadyExists";
+    }
+
     private String extractEntityNameFromException(String message){
         Pattern pattern = Pattern.compile("(\\w+)");
         Matcher matcher = pattern.matcher(message);

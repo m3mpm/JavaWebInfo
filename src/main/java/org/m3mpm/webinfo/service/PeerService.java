@@ -12,7 +12,7 @@ public interface PeerService {
 
     Optional<PeerDto> getPeerByNickname(String name);
 
-    boolean savePeer(PeerDto peerDto);
+    void savePeer(PeerDto peerDto);
 
     void deletePeer(PeerDto peerDto);
 
