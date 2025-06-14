@@ -16,9 +16,9 @@ public abstract class PeerMapper {
     @Autowired
     private PeerRepository peerRepository;
 
-    public abstract PeerDto peerToPeerDto(PeerEntity peer);
+    public abstract PeerDto toDto(PeerEntity peer);
 
-    public abstract PeerEntity peerDtoToPeer(PeerDto peerDto);
+    public abstract PeerEntity toEntity(PeerDto peerDto);
 
     public abstract void updatePeerFromDto(PeerDto peerDto, @MappingTarget PeerEntity peerEntity);
 

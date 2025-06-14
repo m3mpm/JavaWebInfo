@@ -30,7 +30,7 @@ public class PeerServiceImp implements PeerService {
     /* ver.1 */
 //    public Optional<List<PeerDto>> getAllPeers() {
 //        List<PeerEntity> peersList = peerRepository.findAll();
-//        return peersList.isEmpty() ? Optional.empty() : Optional.of(peersList.stream().map(peerMapper::peerToPeerDto).collect(Collectors.toList()));
+//        return peersList.isEmpty() ? Optional.empty() : Optional.of(peersList.stream().map(peerMapper::toDto).collect(Collectors.toList()));
 //    }
 
     /* ver.2 */
@@ -38,7 +38,7 @@ public class PeerServiceImp implements PeerService {
 //        List<PeerEntity> peersList = peerRepository.findAll();
 //
 //            return Optional.ofNullable(peersList.isEmpty() ? null : peersList.stream()
-//                .map(peerMapper::peerToPeerDto)
+//                .map(peerMapper::toDto)
 //                .collect(Collectors.toList()));
 //    }
 
@@ -47,7 +47,7 @@ public class PeerServiceImp implements PeerService {
     public List<PeerDto> getAllPeers() {
         List<PeerEntity> peersList = peerRepository.findAll();
         return peersList.stream()
-                .map(peerMapper::peerToPeerDto)
+                .map(peerMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -56,7 +56,7 @@ public class PeerServiceImp implements PeerService {
     public PeerDto getPeerById(String id) {
         return peerRepository.
                 findById(id).
-                map(peerMapper::peerToPeerDto).
+                map(peerMapper::toDto).
                 orElseThrow(() -> new EntityNotFoundException("Peer with nickname '" + id + "' not found."));
     }
 
@@ -65,20 +65,20 @@ public class PeerServiceImp implements PeerService {
 //    public PeerDto getPeerById(String id) {
 //        return peerRepository.
 //                findById(id).
-//                map(peerMapper::peerToPeerDto).
+//                map(peerMapper::toDto).
 //                orElseThrow(() -> new EntityNotFoundException("Peer with nickname '" + id + "' not found.", "Peer"));
 //    }
 
     @Override
     public Optional<PeerDto> getPeerByNickname(String nickname) {
         Optional<PeerEntity> optionalPeerEntity = peerRepository.findPeerEntityByNickname(nickname);
-        return optionalPeerEntity.map(peerMapper::peerToPeerDto);
+        return optionalPeerEntity.map(peerMapper::toDto);
     }
 
     @Override
     public void savePeer(PeerDto peerDto) {
         if (!peerRepository.existsById(peerDto.getNickname())) {
-            peerRepository.save(peerMapper.peerDtoToPeer(peerDto));
+            peerRepository.save(peerMapper.toEntity(peerDto));
         } else {
             throw new EntityAlreadyExistsException("Peer with nickname '" + peerDto.getNickname() + "' is already exists.");
         }
