@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Show Task</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}" href="/css/normalize.css">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+<div class="parent">
+    <div class="block">
+        <h2>Task Info</h2>
+
+        <table>
+          <thead>
+              <tr>
+                <th>Title</th>
+                <th>Parent Task</th>
+                <th>Max Xp</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td th:text="${taskDto.title}">Title</td>
+                <td th:text="${taskDto.parentTask}">Parent Task</td>
+                <td th:text="${taskDto.maxXp}">Max Xp</td>
+              </tr>
+          </tbody>
+        </table>
+
+        <a th:href="@{/tasks}">Back to list of Tasks</a>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -29,7 +29,7 @@ public class TaskServiceImp implements TaskService {
     @Override
     public TaskDto getTaskById(String id) {
         return taskRepository.findById(id).map(taskMapper::toDto).
-                orElseThrow(() -> new RuntimeException("Task with title '" + id + "' not found"));
+                orElseThrow(() -> new EntityNotFoundException("Task with title '" + id + "' not found"));
     }
 
     @Override
