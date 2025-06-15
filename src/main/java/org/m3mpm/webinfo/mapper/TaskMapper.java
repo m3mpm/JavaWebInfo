@@ -19,27 +19,27 @@ public abstract class TaskMapper {
     @Autowired
     private TaskRepository taskRepository;
 
-    @Mapping(target = "parentTask", qualifiedByName = "mapParentTaskToString")
+    @Mapping(target = "parentTask", qualifiedByName = "taskEntityToString")
     public abstract TaskDto toDto(TaskEntity taskEntity);
 
-    @Mapping(target = "parentTask", qualifiedByName = "mapStringToParentTask")
+    @Mapping(target = "parentTask", qualifiedByName = "stringToTaskEntity")
     public abstract TaskEntity toEntity(TaskDto taskDto);
 
-    @Named("mapParentTaskToString")
-    String mapParentTaskToString(TaskEntity parentTask) {
-        if (parentTask == null) {
-            return null;
-        }
-        return parentTask.getTitle();
-    }
-
-    @Named("mapStringToParentTask")
-    TaskEntity mapStringToParentTask(String title) {
-        if (title == null || title.isEmpty()) {
-            return null;
-        }
-        return null;
-    }
+//    @Named("mapParentTaskToString")
+//    String mapParentTaskToString(TaskEntity parentTask) {
+//        if (parentTask == null) {
+//            return null;
+//        }
+//        return parentTask.getTitle();
+//    }
+//
+//    @Named("mapStringToParentTask")
+//    TaskEntity mapStringToParentTask(String title) {
+//        if (title == null || title.isEmpty()) {
+//            return null;
+//        }
+//        return null;
+//    }
 
     public abstract List<TaskDto> toDtoList(List<TaskEntity> taskEntities);
 
@@ -47,13 +47,15 @@ public abstract class TaskMapper {
 
     public void updateTaskFromDto(TaskDto taskDto, @MappingTarget TaskEntity taskEntity) {}
 
-    String taskToString(TaskEntity taskEntity) {
+    @Named("taskEntityToString")
+    String taskEntityToString(TaskEntity taskEntity) {
         return taskEntity == null ? null : taskEntity.getTitle();
     }
 
+    @Named("stringToTaskEntity")
     TaskEntity stringToTaskEntity(String title) {
         return taskRepository.findById(title).
-                orElseThrow(() -> new EntityNotFoundException("Task with title '" + title + "' not found"));
+                orElse(null);
     }
 
 }

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add New Task</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+<div class="parent">
+    <div class="block">
+        <h3>New Task</h3>
+
+        <form th:action="@{/tasks/add}" th:method="post" th:object="${newTaskDto}">
+
+            <div th:if="${#fields.hasAnyErrors()}" >
+                    <span class="validationError">
+                        Please correct the problems below and resubmit.
+                    </span>
+            </div>
+
+            <div>
+                <label for="title">Title</label>
+                <input type="text" th:field="*{title}" id="title" placeholder="Title" th:name="title">
+                <span class="validationError" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</span>
+                <br>
+                <label for="parentTask">Parent Task</label>
+                <input type="text" th:field="*{parentTask}" id="parentTask" placeholder="Parent Task" th:name="parentTask">
+                <br>
+                <label for="maxXp">Max Xp</label>
+                <input type="number" th:field="*{maxXp}" id="maxXp" placeholder="Max Xp" min="0" value="0">
+                <span class="validationError" th:if="${#fields.hasErrors('maxXp')}" th:errors="*{maxXp}">Xp error</span>
+                <br>
+                <input type="submit" value="Add Task">
+            </div>
+
+        </form>
+
+        <div>
+            <a th:href="@{/tasks}">Back to list of Tasks</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,13 +1,13 @@
 package org.m3mpm.webinfo.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.m3mpm.webinfo.dto.TaskDto;
 import org.m3mpm.webinfo.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +30,21 @@ public class TaskController {
         TaskDto taskDto = taskService.getTaskById(title);
         model.addAttribute("taskDto", taskDto);
         return "task/showTask";
+    }
+
+    @GetMapping("new")
+    public String newTask(@ModelAttribute("newTaskDto") TaskDto taskDto) {
+        return "task/newTask";
+    }
+
+    @PostMapping("/add")
+    public String addTask(Model model, @Valid @ModelAttribute("newTaskDto") TaskDto taskDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("newTaskDto", taskDto);
+            return "task/newTask";
+        }
+        taskService.saveTask(taskDto);
+        return "redirect:/tasks";
     }
 
 }
