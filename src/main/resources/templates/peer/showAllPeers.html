@@ -13,6 +13,7 @@
 
 <div class="parent">
     <div class="block">
+
         <h2>Peers Table</h2>
         <h3>List all Peers</h3>
         <div>
@@ -29,9 +30,11 @@
             </tr>
             </thead>
             <tbody>
+
             <tr th:if="${#lists.isEmpty(listPeers)}">
-                <td colspan="5">ТАБЛИЦА PEERS ПУСТАЯ</td>
+                <td colspan="5">PEERS TABLE IS EMPTY</td>
             </tr>
+
             <tr th:each="peer,iter : ${listPeers}">
                 <td th:text="${iter.index} + 1">ID</td>
                 <td><a th:href="@{/peers/{nickname}(nickname=${peer.nickname})}" th:text="${peer.nickname}">Nickname</a></td>
