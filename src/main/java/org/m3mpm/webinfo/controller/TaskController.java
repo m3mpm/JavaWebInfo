@@ -53,4 +53,21 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
+    @GetMapping("/{title}/edit")
+    public String showEditTask(Model model, @PathVariable("title") String title) {
+        TaskDto taskDto = taskService.getTaskById(title);
+        model.addAttribute("editTaskDto", taskDto);
+        return "task/editTask";
+    }
+
+    @PostMapping("/update")
+    public String editTask(Model model, @Valid @ModelAttribute("editTaskDto") TaskDto editTaskDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("editTaskDto", editTaskDto);
+            return "task/editTask";
+        }
+        taskService.updateTask(editTaskDto);
+        return "redirect:/tasks";
+    }
+
 }

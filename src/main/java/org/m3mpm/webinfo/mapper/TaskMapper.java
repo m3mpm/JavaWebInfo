@@ -25,27 +25,12 @@ public abstract class TaskMapper {
     @Mapping(target = "parentTask", qualifiedByName = "stringToTaskEntity")
     public abstract TaskEntity toEntity(TaskDto taskDto);
 
-//    @Named("mapParentTaskToString")
-//    String mapParentTaskToString(TaskEntity parentTask) {
-//        if (parentTask == null) {
-//            return null;
-//        }
-//        return parentTask.getTitle();
-//    }
-//
-//    @Named("mapStringToParentTask")
-//    TaskEntity mapStringToParentTask(String title) {
-//        if (title == null || title.isEmpty()) {
-//            return null;
-//        }
-//        return null;
-//    }
-
     public abstract List<TaskDto> toDtoList(List<TaskEntity> taskEntities);
 
     public abstract List<TaskEntity> toEntityList(List<TaskDto> taskDtos);
 
-    public void updateTaskFromDto(TaskDto taskDto, @MappingTarget TaskEntity taskEntity) {}
+    @Mapping(target = "parentTask", qualifiedByName = "stringToTaskEntity")
+    public abstract void updateTaskFromDto(TaskDto taskDto, @MappingTarget TaskEntity taskEntity);
 
     @Named("taskEntityToString")
     String taskEntityToString(TaskEntity taskEntity) {
@@ -54,6 +39,9 @@ public abstract class TaskMapper {
 
     @Named("stringToTaskEntity")
     TaskEntity stringToTaskEntity(String title) {
+        if (title == null || title.isEmpty()) {
+            return null;
+        }
         return taskRepository.findById(title).
                 orElse(null);
     }
