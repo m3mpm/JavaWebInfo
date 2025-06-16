@@ -15,26 +15,20 @@
     <div class="block">
         <h2>Peer Info</h2>
 
-        <div th:if="${errorMessage}">
-            <p th:text="${errorMessage}">Peer not found.</p>
-        </div>
-
-        <div th:if="${peerDto}">
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Birthday</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td th:text="${peerDto.nickname}">Nickname</td>
-                    <td th:text="${peerDto.birthday}">Birthday</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Birthday</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${peerDto.nickname}">Nickname</td>
+                <td th:text="${peerDto.birthday}">Birthday</td>
+            </tr>
+            </tbody>
+        </table>
 
         <a th:href="@{/peers}">Back to list of Peers</a>
 
