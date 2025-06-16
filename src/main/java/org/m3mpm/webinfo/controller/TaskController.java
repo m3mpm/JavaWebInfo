@@ -47,4 +47,10 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
+    @PostMapping("/delete")
+    public String deleteTask(@ModelAttribute("deleteTaskDto") TaskDto taskDto) {
+        taskService.deleteTask(taskDto);
+        return "redirect:/tasks";
+    }
+
 }

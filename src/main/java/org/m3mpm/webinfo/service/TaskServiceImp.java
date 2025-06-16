@@ -43,7 +43,7 @@ public class TaskServiceImp implements TaskService {
 
     @Override
     public void deleteTask(TaskDto taskDto) {
-        if(!taskRepository.existsById(taskDto.getTitle())){
+        if(taskRepository.existsById(taskDto.getTitle())){
             taskRepository.deleteById(taskDto.getTitle());
         } else {
             throw new EntityNotFoundException("Task with title '" + taskDto.getTitle() + "' not found");
