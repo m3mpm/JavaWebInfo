@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Show Task</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+<div class="parent">
+    <div class="block">
+        <h2>Check Info</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Peer</th>
+                <th>Task</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${checkDto.id}">ID</td>
+                <td th:text="${checkDto.peer}">Peer</td>
+                <td th:text="${checkDto.task}">Task</td>
+                <td th:text="${checkDto.date}">Date</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <a th:href="@{/checks}">Back to list of Checks</a>
+
+    </div>
+</div>
+
+</body>
+</html>

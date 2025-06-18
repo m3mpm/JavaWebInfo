@@ -40,7 +40,7 @@
             <tr th:each="check : ${listChecks}">
                 <td th:text="${check.id}">ID</td>
                 <td th:text="${check.peer}">Peer</td>
-                <td th:text="${check.task}">Task</td>
+                <td><a th:href="@{checks/{id}(id=${check.id})}" th:text="${check.task}">Task</a></td>
                 <td th:text="${check.date}">Date</td>
                 <td>
                     <button> <a th:href="@{checks/{id}/edit(id=${check.id})}">Edit</a></button>
