@@ -1,14 +1,14 @@
 package org.m3mpm.webinfo.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.m3mpm.webinfo.dto.CheckDto;
 import org.m3mpm.webinfo.service.CheckService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +31,20 @@ public class CheckContoller {
         CheckDto checkDto = checkService.getCheckById(id);
         model.addAttribute("checkDto", checkDto);
         return "check/showCheck";
+    }
+
+    @GetMapping("/new")
+    public String newCheck(@ModelAttribute("newCheckDto") CheckDto checkDto) {
+        return "check/newCheck";
+    }
+
+    @PostMapping("/add")
+    public String addCheck(Model model, @Valid @ModelAttribute("newCheckDto") CheckDto checkDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("newCheckDto", checkDto);
+            return "check/newCheck";
+        }
+        checkService.saveCheck(checkDto);
+        return "redirect:/checks";
     }
 }
