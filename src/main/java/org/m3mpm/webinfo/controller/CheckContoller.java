@@ -47,4 +47,10 @@ public class CheckContoller {
         checkService.saveCheck(checkDto);
         return "redirect:/checks";
     }
+
+    @PostMapping("/delete")
+    public String deleteCheck(@ModelAttribute("deleteCheckDto") CheckDto checkDto) {
+        checkService.deleteCheck(checkDto);
+        return "redirect:/checks";
+    }
 }

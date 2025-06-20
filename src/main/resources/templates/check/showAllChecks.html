@@ -46,7 +46,7 @@
                     <button> <a th:href="@{checks/{id}/edit(id=${check.id})}">Edit</a></button>
                 </td>
                 <td>
-                    <form th:action="@{/checks/delete}" th:method="post" th:object="${deleteCheck}">
+                    <form th:action="@{/checks/delete}" th:method="post" th:object="${deleteCheckDto}">
                         <input type="hidden" th:name="id" th:value="${check.id}">
                         <input type="hidden" th:name="peer" th:value="${check.peer}">
                         <input type="hidden" th:name="task" th:value="${check.task}">
