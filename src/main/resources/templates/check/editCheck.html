@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit Task</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+<div class="parent">
+    <div class="block">
+        <h3>Edit Check</h3>
+
+        <form th:action="@{/checks/update}" th:method="post" th:object="${editCheckDto}">
+
+            <div th:if="${#fields.hasAnyErrors()}" >
+                    <span class="validationError">
+                        Please correct the problems below and resubmit.
+                    </span>
+            </div>
+
+            <div>
+                <label for="id">ID</label>
+                <input type="text" th:field="*{id}" id="id" readonly="readonly" th:readonly="true">
+                <span class="validationError" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">ID Error Message</span>
+                <br>
+                <label for="peer">Peer</label>
+                <input type="text" th:field="*{peer}" id="peer" placeholder="Peer Nickname" th:name="peer">
+                <span class="validationError" th:if="${#fields.hasErrors('peer')}" th:errors="*{peer}">Peer Error Message</span>
+                <br>
+                <label for="task">Task</label>
+                <input type="text" th:field="*{task}" id="task" placeholder="Task Title" th:name="parentTask">
+                <span class="validationError" th:if="${#fields.hasErrors('task')}" th:errors="*{task}">Task Error Message</span>
+                <br>
+                <label for="date">Date</label>
+                <input type="date" th:field="*{date}" id="date" placeholder="YYYY-MM-DD">
+                <span class="validationError" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Date Error Message</span>
+                <br>
+                <input type="submit" value="Edit Check">
+            </div>
+
+        </form>
+
+        <div>
+            <a th:href="@{/checks}">Back to list of Checks</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

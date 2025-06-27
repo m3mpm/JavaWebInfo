@@ -53,4 +53,21 @@ public class CheckContoller {
         checkService.deleteCheck(checkDto);
         return "redirect:/checks";
     }
+
+    @GetMapping("/{id}/edit")
+    public String showEditCheck(Model model, @PathVariable("id") Long id) {
+        CheckDto checkDto = checkService.getCheckById(id);
+        model.addAttribute("editCheckDto", checkDto);
+        return "check/editCheck";
+    }
+
+    @PostMapping("/update")
+    public String editCheck(Model model, @Valid @ModelAttribute("editCheckDto") CheckDto checkDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("editCheckDto", checkDto);
+            return "check/editCheck";
+        }
+        checkService.updateCheck(checkDto);
+        return "redirect:/checks";
+    }
 }
