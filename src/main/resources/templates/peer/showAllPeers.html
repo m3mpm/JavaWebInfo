@@ -43,7 +43,7 @@
                     <button> <a th:href="@{peers/{nickname}/edit(nickname=${peer.nickname})}">Edit</a></button>
                 </td>
                 <td>
-                    <form th:action="@{/peers/delete}" th:method="post" th:object="${deletePeer}">
+                    <form th:action="@{/peers/delete}" th:method="post" th:object="${deletePeerDto}">
                         <input type="hidden" th:name="nickname" th:value="${peer.nickname}">
                         <input type="hidden" th:name="birthday" th:value="${peer.birthday}">
                         <button type="submit">Delete</button>

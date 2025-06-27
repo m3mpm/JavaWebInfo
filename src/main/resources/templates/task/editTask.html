@@ -26,14 +26,14 @@
             <div>
                 <label for="title">Title</label>
                 <input type="text" th:field="*{title}" id="title" placeholder="Title" readonly>
-                <span class="validationError" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</span>
+                <span class="validationError" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error Message</span>
                 <br>
                 <label for="parentTask">Parent Task</label>
                 <input type="text" th:field="*{parentTask}" id="parentTask" placeholder="Parent Task" th:name="parentTask">
                 <br>
                 <label for="maxXp">Max Xp</label>
                 <input type="number" th:field="*{maxXp}" id="maxXp" placeholder="Max Xp" min="0" value="0">
-                <span class="validationError" th:if="${#fields.hasErrors('maxXp')}" th:errors="*{maxXp}">Xp error</span>
+                <span class="validationError" th:if="${#fields.hasErrors('maxXp')}" th:errors="*{maxXp}">Xp Error Message</span>
                 <br>
                 <input type="submit" value="Edit Task">
             </div>

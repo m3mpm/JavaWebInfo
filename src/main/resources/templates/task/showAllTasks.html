@@ -45,7 +45,7 @@
                     <button> <a th:href="@{tasks/{title}/edit(title=${task.title})}">Edit</a></button>
                 </td>
                 <td>
-                    <form th:action="@{/tasks/delete}" th:method="post" th:object="${deleteTask}">
+                    <form th:action="@{/tasks/delete}" th:method="post" th:object="${deleteTaskDto}">
                         <input type="hidden" th:name="title" th:value="${task.title}">
                         <input type="hidden" th:name="parentTask" th:value="${task.parentTask}">
                         <input type="hidden" th:name="maxXp" th:value="${task.maxXp}">
