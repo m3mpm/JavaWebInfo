@@ -1,5 +1,25 @@
-FROM openjdk:21-jdk
+# Этап 1: Сборка приложения с использованием Maven (Alpine)
+FROM maven:3.9.10-amazoncorretto-21-alpine AS builder
 LABEL authors="m3mpm"
+
 WORKDIR /app
-COPY target/*.jar app.jar
+# Копируем pom.xml и скачиваем зависимости (кэшируем слои)
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Копируем исходный код
+COPY src ./src
+
+# Собираем JAR файл
+# -DskipTests - Maven пропускает шаги test-compile и test
+RUN mvn clean package -DskipTests
+
+# Этап 2: Запуск приложения (финальный образ - Debian slim)
+FROM openjdk:21-jdk-slim
+LABEL authors="m3mpm"
+
+WORKDIR /app
+
+COPY --from=builder /app/target/*.jar app.
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
