@@ -11,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/peers")
@@ -63,14 +62,14 @@ public class PeerController {
 
     @GetMapping("/new")
     public String newPeer(@ModelAttribute("newPeerDto") PeerDto peerDto) {
-        return "/peer/newPeer";
+        return "peer/newPeer";
     }
 
     @PostMapping("/add")
     public String addPeer(Model model, @Valid @ModelAttribute("newPeerDto") PeerDto peerDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("newPeerDto", peerDto);
-            return "/peer/newPeer";
+            return "peer/newPeer";
         }
         peerService.savePeer(peerDto);
         return "redirect:/peers";
