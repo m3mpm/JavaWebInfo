@@ -3,6 +3,7 @@ FROM maven:3.9.10-amazoncorretto-21-alpine AS builder
 LABEL authors="m3mpm"
 
 WORKDIR /app
+
 # Копируем pom.xml и скачиваем зависимости (кэшируем слои)
 COPY pom.xml .
 RUN mvn dependency:go-offline
@@ -20,6 +21,8 @@ LABEL authors="m3mpm"
 
 WORKDIR /app
 
-COPY --from=builder /app/target/*.jar app.
+# Копируем jar файл из этапа сброки builder и переименовываем его в app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
+# Запуск Spring Boot приложения из JAR файла
 ENTRYPOINT ["java", "-jar", "app.jar"]
