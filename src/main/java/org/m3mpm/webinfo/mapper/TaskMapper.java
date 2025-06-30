@@ -43,7 +43,7 @@ public abstract class TaskMapper {
             return null;
         }
         return taskRepository.findById(title).
-                orElseThrow(() -> new EntityNotFoundException("Task with title '" + title + "' is already exists"));
+                orElseThrow(() -> new EntityNotFoundException("Task with title '" + title + "' not found."));
     }
 
 }
