@@ -4,11 +4,11 @@ build:
 docker-build:
 	docker-compose build
 
-docker-up: docker-build
-	docker-compose up
-
 docker-build-up:
 	docker-compose up --build
+
+docker-up:
+	docker-compose up
 
 docker-down:
 	docker-compose down
